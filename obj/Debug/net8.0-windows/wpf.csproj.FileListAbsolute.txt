@@ -22,3 +22,5 @@ C:\Users\user\source\visualStudio\c#\test\front\wpf\obj\Debug\net8.0-windows\Vie
 C:\Users\user\source\visualStudio\c#\test\front\wpf\obj\Debug\net8.0-windows\GeneratedInternalTypeHelper.g.cs
 C:\Users\user\source\visualStudio\c#\test\front\wpf\obj\Debug\net8.0-windows\View\MainWindow.baml
 C:\Users\user\source\VisualStudio\c#\test\front\wpf\obj\Debug\net8.0-windows\wpf.csproj.Up2Date
+C:\Users\user\source\visualStudio\c#\test\front\wpf\obj\Debug\net8.0-windows\wpf.sourcelink.json
+C:\Users\user\source\visualStudio\c#\test\front\wpf\obj\Debug\net8.0-windows\App.baml

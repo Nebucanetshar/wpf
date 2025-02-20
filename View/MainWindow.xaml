@@ -4,18 +4,30 @@
         xmlns:h ="http://helix-toolkit.org/wpf"
         
         xmlns:local="clr-namespace:WPF3D_MVVM"
+        xmlns:sphère="clr-namespace:Sphère_MVVM"
         
         Title="MainWindow" Height="450" Width="800">
 
-    <Window.DataContext>
+    <!--<Window.DataContext>
         <local:Spiral/>
+    </Window.DataContext>-->
+
+    <Window.DataContext>
+        <sphère:Sphère/>
     </Window.DataContext>
     
     <Grid>
-        <h:HelixViewport3D>
+        <!--<h:HelixViewport3D>
             <h:SunLight/>
             <h:GridLinesVisual3D Length="10" Width="10" MinorDistance="1" MajorDistance="5"/>
             <h:LinesVisual3D Thickness="2" Color="Blue" Points="{Binding Courbe}"/>
+        </h:HelixViewport3D>-->
+
+        <h:HelixViewport3D>
+            <h:SunLight/>
+            <h:GridLinesVisual3D Length="10" Width="10" MinorDistance="1" MajorDistance="5"/>
+            <h:SphereVisual3D  Radius="2" Center="{Binding BindSphère}" 
+                               Fill="{Binding BindColor, PresentationTraceSources.TraceLevel =High}"/>
         </h:HelixViewport3D>
     </Grid>
 </Window>

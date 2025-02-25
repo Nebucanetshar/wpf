@@ -1,0 +1,14 @@
+<h:HelixViewport3D Name="viewport" Background="LightGray">
+    
+    <!-- Caméra avec un angle de départ -->
+    <h:HelixViewport3D.Camera>
+        <PerspectiveCamera Position="0, 5, 20" LookDirection="0, -5, -20" UpDirection="0,1,0" />
+    </h:HelixViewport3D.Camera>
+
+    <!-- Lumière -->
+    <h:SunLight/>
+
+    <!-- MODELE 3D À MANIPULER -->
+    <h:SphereVisual3D Center="0,0,0" Radius="2" Fill="Blue"/>
+
+</h:HelixViewport3D>

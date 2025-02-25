@@ -1,4 +1,5 @@
 using Sphère_MVVM;
+using WPF_MAN;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -22,5 +23,6 @@ public partial class MainWindow : Window
         InitializeComponent();
         //this.DataContext = new Spiral();
         DataContext = new Sphère();
+        DataContext = new ManipCamera();
     }
 }

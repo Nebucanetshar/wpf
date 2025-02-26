@@ -30,7 +30,7 @@ public class Sphère : INotifyPropertyChanged
 
     public Sphère()
     {
-        BindSphère = new Point3D(0, 0, 1);
+        BindSphère = new Point3D(0, 0, 2);
         BindColor = Brushes.Green;
     }
 

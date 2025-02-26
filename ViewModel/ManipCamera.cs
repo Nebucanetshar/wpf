@@ -1,5 +1,6 @@
 ﻿using HelixToolkit.Wpf;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -17,7 +18,6 @@ public class ManipCamera : INotifyPropertyChanged
 
     private Point _lastMousePosition;
 
-    
     //private HelixViewport3D _orbite;
     //public HelixViewport3D Orbite
     //{
@@ -27,40 +27,120 @@ public class ManipCamera : INotifyPropertyChanged
     //        _orbite = value;
     //        OnPropertyChanged(nameof(Orbite));
     //    }
-
     //}
 
-    //private HelixViewport3D _zoom;
-    //public HelixViewport3D Zoom
-    //{
-    //    get => _zoom;
-    //    set
-    //    {
-    //        _zoom = value;
-    //        OnPropertyChanged(nameof(Zoom));
-    //    }
-    //}
+    public ManipCamera() { }
 
-    //private HelixViewport3D _pan;
-    //public HelixViewport3D Pan
-    //{
-    //    get => _pan;
-    //    set
-    //    {
-    //        _pan = value;
-    //        OnPropertyChanged(nameof(Pan));
-    //    }
-    //}
-
-    public ManipCamera()
+    #region orbital
+    /// <summary>
+    /// methode pour tourner la camera selon l'axe x et y 
+    /// </summary>
+    /// <param name="dx"></param>
+    /// <param name="dy"></param>
+    /// <param name="speed"></param>
+    public void OrbitalCamera(double dx, double dy, double speed = 0.5)
     {
+        try
+        {
+            var camera = _viewport.Camera as PerspectiveCamera;
 
+            if (camera == null) return;
+
+            //rotation autour de l'axe y (horizontal de la scène)
+            Vector3D x = new Vector3D(0, 1, 0);
+
+            //rotation autour de l'axe x (vertical de la scène) calculer avec le produit croisé
+            //entre deux vecteurs (look et up direction)
+            Vector3D y = Vector3D.CrossProduct(camera.LookDirection, camera.UpDirection);
+
+            //création des quaternions
+            Quaternion qx = new Quaternion(x, -dx * speed);
+            Quaternion qy = new Quaternion(y, -dy * speed);
+
+            //applique la rotation aux directions
+            Quaternion rotation = qx * qy;
+            Matrix3D matrice = Matrix3D.Identity;
+            matrice.Rotate(rotation);
+
+            //MAJ la direction de la camera
+            camera.LookDirection = matrice.Transform(camera.LookDirection);
+            camera.UpDirection = matrice.Transform(camera.UpDirection);
+        }
+        catch (Exception ex)
+        {
+           Trace.TraceInformation($"ERREUR orbitalCamera: {ex.Message} ");
+        }
     }
-    
-    public void OrbitalCamera()
+
+    /// <summary>
+    /// capture le click gauche et stocke la position
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void OrbitalCameraDown(object sender, MouseButtonEventArgs e)
     {
-        _viewport.CameraController.IsRotationEnabled = false;
+        try
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                _lastMousePosition = e.GetPosition(_viewport);
+                _viewport.CaptureMouse();
+            }
+        }
+        catch (Exception ex)
+        {
+            Trace.TraceInformation($"ERREUR OrbitalCameraDown: {ex.Message}");
+        }
     }
+
+    /// <summary>
+    /// deplace la camera en fonction du mouvement de la souris
+    /// </summary>
+    /// <param name="dx"></param>
+    /// <param name="dy"></param>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void OrbitalCameraMove(double dx,double dy,object sender, MouseButtonEventArgs e)
+    {
+        try
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                Point position = e.GetPosition(_viewport);
+                dx = position.X - _lastMousePosition.X;
+                dy = position.Y - _lastMousePosition.Y;
+
+                OrbitalCamera(dx, dy);
+                _lastMousePosition = position; // MAJ position de la souris
+            }
+        }
+        catch (Exception ex)
+        {
+            Trace.TraceInformation($"ERREUR OrbitalCameraMove {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// au relachement on arrête le mouvement
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void OrbitalCameraUp(object sender, MouseButtonEventArgs e)
+    {
+        try
+        {
+            //libère la souris
+          _viewport.ReleaseMouseCapture();
+        }
+        catch (Exception ex)
+        {
+            Trace.TraceInformation($"ERREUR OrbitalCameraUp: {ex.Message}");
+        }
+        
+    }
+    #endregion
+
+    #region panoramique
     /// <summary>
     /// translation de la camera de gauche a droite et de haut en bas 
     /// </summary>
@@ -91,11 +171,10 @@ public class ManipCamera : INotifyPropertyChanged
     /// <param name="e"></param>
     private void PanCameraDown(object sender, MouseButtonEventArgs e)
     {
-        if(e.ChangedButton == MouseButton.Left)
+        if(e.ChangedButton == MouseButton.Right)
         {
             _lastMousePosition = e.GetPosition(_viewport);
             _viewport.CaptureMouse();
-            e.Handled = true;
         }
     }
     /// <summary>
@@ -107,15 +186,14 @@ public class ManipCamera : INotifyPropertyChanged
     /// <param name="e"></param>
     private void PanCameraMove(double dx,double dy,object sender, MouseEventArgs e)
     {
-        if(e.LeftButton == MouseButtonState.Pressed)
+        if (e.LeftButton == MouseButtonState.Pressed)
         {
             Point currentPosition = e.GetPosition(_viewport);
             dx = (currentPosition.X - _lastMousePosition.X) * 0.01;
             dy = (currentPosition.Y - _lastMousePosition.Y) * 0.01;
 
             PanCamera(dx, dy);
-            _lastMousePosition=currentPosition;
-            e.Handled = true;
+            _lastMousePosition = currentPosition;
         }
     }
 
@@ -126,14 +204,14 @@ public class ManipCamera : INotifyPropertyChanged
     /// <param name="e"></param>
     private void PanCameraUp(object sender, MouseButtonEventArgs e)
     {
-        if (e.ChangedButton == MouseButton.Left)
+        if (e.ChangedButton == MouseButton.Right)
         {
             _viewport.ReleaseMouseCapture();
-            e.Handled = true;
         }
     }
+    #endregion
 
-
+    #region zoom
     /// <summary>
     /// mouvement du zoom d'avant en arrière avec la roulette de la souris 
     /// </summary>
@@ -152,7 +230,8 @@ public class ManipCamera : INotifyPropertyChanged
         camera.Position += direction * z;
 
     }
-    
+    #endregion
+
     public event PropertyChangedEventHandler? PropertyChanged;
     public void OnPropertyChanged(string propertyName)
     {

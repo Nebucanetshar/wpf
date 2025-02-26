@@ -16,9 +16,11 @@
     <Window.DataContext>
         <manipulation:ManipCamera/>
     </Window.DataContext>
-    
-    
 
+    <Window.Resources>
+        <sphère:Sphère x:Key="sph"/>
+        <manipulation:ManipCamera x:Key="manip"/>
+    </Window.Resources>
 
     <Grid>
         <!--<h:HelixViewport3D>
@@ -27,7 +29,7 @@
             <h:LinesVisual3D Thickness="2" Color="Blue" Points="{Binding Courbe}"/>
         </h:HelixViewport3D>-->
 
-        <h:HelixViewport3D Margin="0,10,0,10">
+        <h:HelixViewport3D DataContext="{StaticResource sph}" Margin="0,10,0,10">
             <h:SunLight/>
             <h:GridLinesVisual3D Length="8" Width="8" MinorDistance="1" MajorDistance="1"/>
             

@@ -1,0 +1,23 @@
+<Window.Resources>
+    <local:MainViewModel x:Key="MainVM"/>
+    <local:HelperViewModel x:Key="HelperVM"/>
+    <local:ParentViewModel x:Key="ParentVM"/>
+</Window.Resources>
+
+<Grid DataContext="{StaticResource ParentVM}">
+    <TextBlock Text="{Binding MainVM.Titre}"/>
+    <TextBlock Text="{Binding HelperVM.Description}"/>
+</Grid>
+***************viewModel*****************
+
+public class ParentViewModel
+{
+    public MainViewModel MainVM { get; set; }
+    public HelperViewModel HelperVM { get; set; }
+
+    public ParentViewModel()
+    {
+        MainVM = new MainViewModel();
+        HelperVM = new HelperViewModel();
+    }
+}

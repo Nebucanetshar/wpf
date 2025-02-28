@@ -5,18 +5,46 @@
         xmlns:h ="http://helix-toolkit.org/wpf"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:p="clr-namespace:WPF_PROXY"
-        xmlns:m="clr-namespace:WPF_MAN" 
+        xmlns:m="clr-namespace:WPF_MAN"
+        
         
         Title="MainWindow" Height="450" Width="800">
 
     <Window.Resources>
         <p:BindingProxy x:Key="proxy" Data="{Binding}"/>
     </Window.Resources>
+
+    <Window.DataContext>
+        <m:ManipCamera/>
+    </Window.DataContext>
+    
    
         <Grid>
         <h:HelixViewport3D x:Name="Helix">
+            
+            <i:Interaction.Behaviors>
+                <p:BindingBehavior Camera="{Binding Data.Orbite, Source={StaticResource proxy}}"/>
+            </i:Interaction.Behaviors>
+
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="LeftButtonDown">
+                    <i:InvokeCommandAction Command="{Binding ClickDown}" 
+                                           CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window},Path=(p:MouseHelper.MousePosition)}"/>
+                </i:EventTrigger>
+                <i:EventTrigger EventName="MouseMove">
+                    <i:InvokeCommandAction Command="{Binding OrbitalMove}"
+                                           CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window},Path=(p:MouseHelper.MousePosition)}"/>
+                </i:EventTrigger>
+                <i:EventTrigger EventName="LeftButtonUp">
+                    <i:InvokeCommandAction Command="{Binding ClickUp}"
+                                           CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window},Path=(p:MouseHelper.MousePosition)}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            
+            
             <h:SunLight/>
-            <h:GridLinesVisual3D Length="10" Width="10" MinorDistance="1" MajorDistance="1"/>
+            <h:GridLinesVisual3D Length="7" Width="7" MinorDistance="1" MajorDistance="1"/>
+            <h:SphereVisual3D Center="0,0,1.5" Radius="1.5"/>
         </h:HelixViewport3D>
     </Grid>
 </Window>

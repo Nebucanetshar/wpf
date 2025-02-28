@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Input;
 
-namespace WPF_MOUSE;
+namespace WPF_PROXY;
 
 /// <summary>
 /// création d'une attached Property car MousePosition n'existe pas nativement en Xaml
@@ -12,41 +12,41 @@ public static class MouseHelper
     public static readonly DependencyProperty MousePositionProperty =
         DependencyProperty.RegisterAttached(
             "MousePosition", // nom de la propriété 
-            typeof(Point), // type de la propriété 
+            typeof(MouseEventArgs), // type de la propriété 
             typeof(MouseHelper), //type propriétaire
-            new PropertyMetadata(default(Point))); //valeur par default 
+            new PropertyMetadata(null)); //valeur par default 
 
     /// <summary>
     /// affecte une nouvelle position de la souris à un élément
     /// </summary>
     /// <param name="element"></param>
     /// <returns></returns>
-    public static Point GetMousePosition(UIElement element)
+    public static MouseEventArgs GetMousePosition(UIElement element)
     {
-        return (Point)element.GetValue(MousePositionProperty);
+        return (MouseEventArgs)element.GetValue(MousePositionProperty);
     }
     /// <summary>
     /// récupère la position actuelle stocké
     /// </summary>
     /// <param name="element"></param>
     /// <param name="value"></param>
-    public static void SetMousePosition(UIElement element, Point value)
+    public static void SetMousePosition(UIElement element, MouseEventArgs value)
     {
         element.SetValue(MousePositionProperty, value);
     }
 
     /// <summary>
-    /// capture l'éveénement de la souris (MouseMove ect..) vérifie que sender est bien un élément UIElement
-    /// (Grid, HelixViewport3D ect...) calcul la position actuel de la souris avec e.GetPosition et met a jour 
-    /// la propriété attaché avec SetMousePosition
+    /// Pour s'assuré de la comptibilité de typage entre RelayCommand et InvokeCommandAction dans la vue 
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    public static void UpdateMousePosition(object sender, MouseEventArgs e)
+    public static void UpdateMousePosition(UIElement element)
     {
-        if(sender is UIElement element)
+        element.MouseMove += (s, e) =>
         {
-            SetMousePosition(element, e.GetPosition(element));
-        }
+            SetMousePosition(element, e);
+        };
     }
+
+   
 }

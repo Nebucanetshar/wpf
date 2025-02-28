@@ -2,6 +2,7 @@ using Sphère_MVVM;
 using WPF_MAN;
 using WPF_PROXY;
 
+
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -25,6 +26,7 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         DataContext = new ManipCamera();
+       
 
         var proxy = (BindingProxy)FindResource("proxy");
         if(proxy?.Data is ManipCamera manipCamera)

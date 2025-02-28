@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
+using GalaSoft.MvvmLight.Command;
 
 namespace WPF_MAN;
 
@@ -18,18 +19,65 @@ public class ManipCamera : INotifyPropertyChanged
 
     private Point _lastMousePosition;
 
-    //private HelixViewport3D _orbite;
-    //public HelixViewport3D Orbite
-    //{
-    //    get => _orbite;
-    //    set
-    //    {
-    //        _orbite = value;
-    //        OnPropertyChanged(nameof(Orbite));
-    //    }
-    //}
+    double _dx;
+    double _dy;
 
-    public ManipCamera() { }
+    public ICommand ClickDown { get; }
+    public ICommand OrbitalMove { get; }
+    public ICommand ClickUp { get; }
+
+    #region binding orbital
+    private ProjectionCamera _orbite;
+    public ProjectionCamera Orbite
+    {
+        get => _orbite;
+        set
+        {
+            _orbite = value;
+            OnPropertyChanged(nameof(Orbite));
+        }
+    }
+    #endregion
+    #region binding pan
+    private HelixViewport3D _pan;
+    public HelixViewport3D Pan
+    {
+        get => _pan;
+        set
+        {
+            _pan = value;
+            OnPropertyChanged(nameof(Pan));
+        }
+    }
+    #endregion
+
+    #region binding zoom
+    private HelixViewport3D _zoom;
+    public HelixViewport3D Zoom
+    {
+        get => _zoom;
+        set
+        {
+            _zoom = value;
+            OnPropertyChanged(nameof(Zoom));
+        }
+    }
+    #endregion
+
+    public ManipCamera()
+    {
+        Orbite = new PerspectiveCamera
+        {
+            Position = new Point3D(0, 5, 0),
+            LookDirection = new Vector3D(0, 0, 0.1),
+            UpDirection = new Vector3D(0, 1, 0),
+            FieldOfView = 45
+        };
+
+        ClickDown = new RelayCommand<MouseButtonEventArgs>(OrbitalCameraDown);
+        OrbitalMove = new RelayCommand<MouseButtonEventArgs>(OrbitalCameraMove);
+        ClickUp = new RelayCommand(OrbitalCameraUp);
+    }
 
     #region orbital
     /// <summary>
@@ -38,46 +86,58 @@ public class ManipCamera : INotifyPropertyChanged
     /// <param name="dx"></param>
     /// <param name="dy"></param>
     /// <param name="speed"></param>
-    public void OrbitalCamera(double dx, double dy, double speed = 0.5)
+    public void OrbitalCamera(double dx ,double dy, double speed = 0.5)
     {
         try
         {
-            var camera = _viewport.Camera as PerspectiveCamera;
+            if (_orbite == null) return;
 
-            if (camera == null) return;
+            //centre de rotation (point de pivot)
+            Point3D target = new Point3D(0, 0, 0);
 
             //rotation autour de l'axe y (horizontal de la scène)
             Vector3D x = new Vector3D(0, 1, 0);
 
             //rotation autour de l'axe x (vertical de la scène) calculer avec le produit croisé
             //entre deux vecteurs (look et up direction)
-            Vector3D y = Vector3D.CrossProduct(camera.LookDirection, camera.UpDirection);
+            Vector3D y = Vector3D.CrossProduct(_orbite.LookDirection, _orbite.UpDirection);
+            y.Normalize();
 
             //création des quaternions
-            Quaternion qx = new Quaternion(x, -dx * speed);
-            Quaternion qy = new Quaternion(y, -dy * speed);
+            Quaternion wx = new Quaternion(x, - _dx * speed);
+            Quaternion wy = new Quaternion(y, - _dy * speed);
 
             //applique la rotation aux directions
-            Quaternion rotation = qx * qy;
+            Quaternion rotation = wx * wy;
             Matrix3D matrice = Matrix3D.Identity;
             matrice.Rotate(rotation);
 
             //MAJ la direction de la camera
-            camera.LookDirection = matrice.Transform(camera.LookDirection);
-            camera.UpDirection = matrice.Transform(camera.UpDirection);
+            Vector3D qz = matrice.Transform(_orbite.LookDirection);
+            Vector3D qy = matrice.Transform(_orbite.UpDirection);
+            Point3D qx = target - qz * _orbite.Position.DistanceTo(target);
+            
+            //limite d'inclinaison verticale et MAJ de la position de la camera
+            if (Vector3D.AngleBetween(qz, new Vector3D(0,1,0)) > 5 && (Vector3D.AngleBetween(qz,new Vector3D(0,-1,0)) > 5))
+            {
+                _orbite.LookDirection = qz;
+                _orbite.UpDirection = qy;
+                _orbite.Position = qx;
+
+                OnPropertyChanged(nameof(Orbite));
+            }
         }
         catch (Exception ex)
         {
-           Trace.TraceInformation($"ERREUR orbitalCamera: {ex.Message} ");
+            Trace.TraceInformation($"ERREUR OrbitalCamera: {ex.Message} ");
         }
     }
 
     /// <summary>
     /// capture le click gauche et stocke la position
     /// </summary>
-    /// <param name="sender"></param>
     /// <param name="e"></param>
-    private void OrbitalCameraDown(object sender, MouseButtonEventArgs e)
+    public void OrbitalCameraDown(MouseButtonEventArgs e)
     {
         try
         {
@@ -96,22 +156,19 @@ public class ManipCamera : INotifyPropertyChanged
     /// <summary>
     /// deplace la camera en fonction du mouvement de la souris
     /// </summary>
-    /// <param name="dx"></param>
-    /// <param name="dy"></param>
-    /// <param name="sender"></param>
     /// <param name="e"></param>
-    private void OrbitalCameraMove(double dx,double dy,object sender, MouseButtonEventArgs e)
+    public void OrbitalCameraMove(MouseButtonEventArgs e)
     {
         try
         {
             if (e.LeftButton == MouseButtonState.Pressed)
             {
                 Point position = e.GetPosition(_viewport);
-                dx = position.X - _lastMousePosition.X;
-                dy = position.Y - _lastMousePosition.Y;
+                _dx = position.X - _lastMousePosition.X;
+                _dy = position.Y - _lastMousePosition.Y;
 
-                OrbitalCamera(dx, dy);
-                _lastMousePosition = position; // MAJ position de la souris
+                OrbitalCamera(_dx, _dy);
+                _lastMousePosition = position; // MAJ position de la souris 
             }
         }
         catch (Exception ex)
@@ -123,20 +180,17 @@ public class ManipCamera : INotifyPropertyChanged
     /// <summary>
     /// au relachement on arrête le mouvement
     /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private void OrbitalCameraUp(object sender, MouseButtonEventArgs e)
+    public void OrbitalCameraUp()
     {
         try
         {
             //libère la souris
-          _viewport.ReleaseMouseCapture();
+            _viewport.ReleaseMouseCapture();
         }
         catch (Exception ex)
         {
             Trace.TraceInformation($"ERREUR OrbitalCameraUp: {ex.Message}");
         }
-        
     }
     #endregion
 
@@ -148,18 +202,18 @@ public class ManipCamera : INotifyPropertyChanged
     /// <param name="dy"></param>
     private void PanCamera(double dx, double dy)
     {
-        if(_viewport.Camera is PerspectiveCamera camera)
+        if (_viewport.Camera is PerspectiveCamera camera)
         {
-           
-           //vecteur de deplacement en x et y dans le repère orthonormé de la camera
+
+            //vecteur de deplacement en x et y dans le repère orthonormé de la camera
             Vector3D x = Vector3D.CrossProduct(camera.LookDirection, camera.UpDirection);
             x.Normalize();
             Vector3D y = camera.UpDirection;
             y.Normalize();
-           
+
             //calcul du deplacement final
             Vector3D translation = (-dx * x) + (dy * y);
-            
+
             //appliqué le deplacement à la position de la camera
             camera.Position += translation;
         }
@@ -171,7 +225,7 @@ public class ManipCamera : INotifyPropertyChanged
     /// <param name="e"></param>
     private void PanCameraDown(object sender, MouseButtonEventArgs e)
     {
-        if(e.ChangedButton == MouseButton.Right)
+        if (e.ChangedButton == MouseButton.Right)
         {
             _lastMousePosition = e.GetPosition(_viewport);
             _viewport.CaptureMouse();
@@ -184,7 +238,7 @@ public class ManipCamera : INotifyPropertyChanged
     /// <param name="dy"></param>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private void PanCameraMove(double dx,double dy,object sender, MouseEventArgs e)
+    private void PanCameraMove(double dx, double dy, object sender, MouseEventArgs e)
     {
         if (e.LeftButton == MouseButtonState.Pressed)
         {

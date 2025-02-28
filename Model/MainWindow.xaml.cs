@@ -1,5 +1,7 @@
 using Sphère_MVVM;
 using WPF_MAN;
+using WPF_PROXY;
+
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using HelixToolkit.Wpf;
 
 namespace WPF3D_MVVM;
 
@@ -21,8 +24,13 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-        //this.DataContext = new Spiral();
-        DataContext = new Sphère();
         DataContext = new ManipCamera();
+
+        var proxy = (BindingProxy)FindResource("proxy");
+        if(proxy?.Data is ManipCamera manipCamera)
+        {
+            Helix.Camera = manipCamera.Orbite;
+        }
+
     }
 }

@@ -1,0 +1,6 @@
+<i:Interaction.Triggers>
+    <i:EventTrigger EventName="MouseMove">
+        <i:InvokeCommandAction Command="{Binding MouseMoveCommand}"
+                               CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=(local:MouseHelper.MousePosition)}"/>
+    </i:EventTrigger>
+</i:Interaction.Triggers>

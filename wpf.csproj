@@ -10,6 +10,8 @@
 
   <ItemGroup>
     <PackageReference Include="HelixToolkit.Wpf" Version="2.26.0" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
+    <PackageReference Include="MvvMlightLibs" Version="5.4.1.1" />
   </ItemGroup>
 
 </Project>

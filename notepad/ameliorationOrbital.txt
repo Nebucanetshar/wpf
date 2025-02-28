@@ -1,0 +1,21 @@
+🎯 Assurer que la caméra ne pointe pas vers un axe trop vertical
+
+Actuellement, ta caméra peut potentiellement "basculer" si UpDirection s'inverse
+après trop de rotations verticales.
+ 
+Solution : Ajouter une limite d'angle (par ex. entre -89° et +89° d'inclinaison
+ verticale).
+🚀 Optimiser le produit croisé
+
+Actuellement, y (Vector3D.CrossProduct(camera.LookDirection, camera.UpDirection)) 
+peut être mal orienté
+si LookDirection devient parallèle à UpDirection après une rotation extrême.
+
+Solution : Normaliser y avant de l’utiliser.
+🔄 Rotation autour d'un pivot
+
+Ton code tourne uniquement la direction de la caméra, mais pas sa position.
+
+Solution : Si tu veux une rotation orbitale complète, il faut faire 
+tourner la position de la caméra 
+autour d'un pivot (exemple : Point3D target = new Point3D(0,0,0)).

@@ -12,7 +12,7 @@ public static class MouseHelper
     public static readonly DependencyProperty MousePositionProperty =
         DependencyProperty.RegisterAttached(
             "MousePosition", // nom de la propriété 
-            typeof(MouseEventArgs), // type de la propriété 
+            typeof(Point), // type de la propriété 
             typeof(MouseHelper), //type propriétaire
             new PropertyMetadata(null)); //valeur par default 
 
@@ -21,32 +21,41 @@ public static class MouseHelper
     /// </summary>
     /// <param name="element"></param>
     /// <returns></returns>
-    public static MouseEventArgs GetMousePosition(UIElement element)
+    public static Point GetMousePosition(UIElement element)
     {
-        return (MouseEventArgs)element.GetValue(MousePositionProperty);
+        return (Point)element.GetValue(MousePositionProperty);
     }
     /// <summary>
-    /// récupère la position actuelle stocké
+    /// definie la nouvelle position
     /// </summary>
     /// <param name="element"></param>
     /// <param name="value"></param>
-    public static void SetMousePosition(UIElement element, MouseEventArgs value)
+    public static void SetMousePosition(UIElement element,Point value)
     {
         element.SetValue(MousePositionProperty, value);
     }
 
     /// <summary>
-    /// Pour s'assuré de la comptibilité de typage entre RelayCommand et InvokeCommandAction dans la vue 
+    /// capture la position de la souris et MAJ l'attached Property
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    public static void UpdateMousePosition(UIElement element)
+    public static void UpdateMousePosition(object sender, MouseEventArgs e)
     {
-        element.MouseMove += (s, e) =>
+        if (sender is UIElement element)
         {
-            SetMousePosition(element, e);
-        };
+            Point position = e.GetPosition(element);
+            SetMousePosition(element, position);
+        }
     }
 
-   
+    public static void AttachMouseTracking(UIElement element)
+    {
+        if (element == null)
+        {
+            element.MouseMove -= UpdateMousePosition;
+            element.MouseMove += UpdateMousePosition;
+
+        }
+    }
 }

@@ -27,12 +27,21 @@ public partial class MainWindow : Window
         InitializeComponent();
         DataContext = new ManipCamera();
        
-
+       // acces a une instance de ManipCamera depuis BindingProxy pour lier Helix.Camera 
         var proxy = (BindingProxy)FindResource("proxy");
         if(proxy?.Data is ManipCamera manipCamera)
         {
             Helix.Camera = manipCamera.Orbite;
         }
+    }
 
+    /// <summary>
+    /// ajout de la méthode AttachMouseTracking pour attacher correctement MouseMouve
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void OnViewportLoaded(object sender, RoutedEventArgs e)
+    {
+        MouseHelper.AttachMouseTracking(Helix);
     }
 }

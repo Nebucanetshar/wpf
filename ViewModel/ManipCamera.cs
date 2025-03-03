@@ -17,14 +17,15 @@ public class ManipCamera : INotifyPropertyChanged
         Background = Brushes.LightCoral
     };
 
-    private Point _lastMousePosition;
+    private Point? _lastMousePosition = null;
 
-    double _dx;
-    double _dy;
+    private double _dx;
+    private double _dy;
+    private double _sensitivity = 5;
 
-    public ICommand ClickDown { get; }
+    public ICommand ClicDown { get; }
     public ICommand OrbitalMove { get; }
-    public ICommand ClickUp { get; }
+    public ICommand ClicUp { get; }
 
     #region binding orbital
     private ProjectionCamera _orbite;
@@ -68,15 +69,15 @@ public class ManipCamera : INotifyPropertyChanged
     {
         Orbite = new PerspectiveCamera
         {
-            Position = new Point3D(0, 5, 0),
-            LookDirection = new Vector3D(0, 0, 0.1),
-            UpDirection = new Vector3D(0, 1, 0),
-            FieldOfView = 45
+            Position = new Point3D(6, 6, 5),
+            LookDirection = new Vector3D(-1,-1,-1),
+            UpDirection = new Vector3D(-1, -1, 0),
+            FieldOfView = 90
         };
 
-        ClickDown = new RelayCommand<MouseButtonEventArgs>(OrbitalCameraDown);
-        OrbitalMove = new RelayCommand<MouseButtonEventArgs>(OrbitalCameraMove);
-        ClickUp = new RelayCommand(OrbitalCameraUp);
+        ClicDown = new RelayCommand<MouseButtonEventArgs>(OrbitalCameraDown);
+        OrbitalMove = new RelayCommand<Point>(OrbitalCameraMove);
+        ClicUp = new RelayCommand(OrbitalCameraUp);
     }
 
     #region orbital
@@ -139,6 +140,7 @@ public class ManipCamera : INotifyPropertyChanged
     /// <param name="e"></param>
     public void OrbitalCameraDown(MouseButtonEventArgs e)
     {
+        Trace.TraceInformation("interception du clicDown");
         try
         {
             if (e.LeftButton == MouseButtonState.Pressed)
@@ -157,23 +159,17 @@ public class ManipCamera : INotifyPropertyChanged
     /// deplace la camera en fonction du mouvement de la souris
     /// </summary>
     /// <param name="e"></param>
-    public void OrbitalCameraMove(MouseButtonEventArgs e)
+    public void OrbitalCameraMove(Point position)
     {
-        try
-        {
-            if (e.LeftButton == MouseButtonState.Pressed)
-            {
-                Point position = e.GetPosition(_viewport);
-                _dx = position.X - _lastMousePosition.X;
-                _dy = position.Y - _lastMousePosition.Y;
+        Trace.TraceInformation("interception du cameraMove");
 
-                OrbitalCamera(_dx, _dy);
-                _lastMousePosition = position; // MAJ position de la souris 
-            }
-        }
-        catch (Exception ex)
+        if (_lastMousePosition != null)
         {
-            Trace.TraceInformation($"ERREUR OrbitalCameraMove {ex.Message}");
+            _dx = position.X - _lastMousePosition.Value.X * _sensitivity;
+            _dy = position.Y - _lastMousePosition.Value.Y * _sensitivity;
+
+            OrbitalCamera(_dy, _dx);
+            _lastMousePosition = position; // MAJ position de la souris 
         }
     }
 

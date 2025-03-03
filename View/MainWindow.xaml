@@ -28,7 +28,7 @@
 
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="LeftButtonDown">
-                    <i:InvokeCommandAction Command="{Binding ClickDown}" 
+                    <i:InvokeCommandAction Command="{Binding ClicDown}" 
                                            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window},Path=(p:MouseHelper.MousePosition)}"/>
                 </i:EventTrigger>
                 <i:EventTrigger EventName="MouseMove">
@@ -36,12 +36,12 @@
                                            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window},Path=(p:MouseHelper.MousePosition)}"/>
                 </i:EventTrigger>
                 <i:EventTrigger EventName="LeftButtonUp">
-                    <i:InvokeCommandAction Command="{Binding ClickUp}"
+                    <i:InvokeCommandAction Command="{Binding ClicUp}"
                                            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window},Path=(p:MouseHelper.MousePosition)}"/>
                 </i:EventTrigger>
             </i:Interaction.Triggers>
-            
-            
+
+          
             <h:SunLight/>
             <h:GridLinesVisual3D Length="7" Width="7" MinorDistance="1" MajorDistance="1"/>
             <h:SphereVisual3D Center="0,0,1.5" Radius="1.5"/>

@@ -5,7 +5,7 @@ using System.Windows.Input;
 namespace WPF_PROXY;
 
 /// <summary>
-/// création d'une attached Property car MousePosition n'existe pas nativement en Xaml
+/// création d'une attached Property permet de lier la position de la souris et de l'utilisé dans le binding
 /// </summary>
 public static class MouseHelper
 {
@@ -14,7 +14,7 @@ public static class MouseHelper
             "MousePosition", // nom de la propriété 
             typeof(Point), // type de la propriété 
             typeof(MouseHelper), //type propriétaire
-            new PropertyMetadata(null)); //valeur par default 
+            new PropertyMetadata(new Point(0, 0))); //valeur par default 
 
     /// <summary>
     /// affecte une nouvelle position de la souris à un élément
@@ -49,13 +49,19 @@ public static class MouseHelper
         }
     }
 
+    /// <summary>
+    /// Configuration du routage pour la vue
+    /// </summary>
+    /// <param name="element"></param>
     public static void AttachMouseTracking(UIElement element)
     {
-        if (element == null)
+        if (element != null)
         {
             element.MouseMove -= UpdateMousePosition;
             element.MouseMove += UpdateMousePosition;
 
         }
     }
+
+   
 }

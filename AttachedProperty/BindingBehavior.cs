@@ -6,6 +6,9 @@ using Microsoft.Xaml.Behaviors;
 
 namespace WPF_PROXY;
 
+/// <summary>
+/// création d'une Attached Property car on interagit avec un comportement dans la vue grâce à "http://schemas.microsoft.com/xaml/behaviors"
+/// </summary>
 public class BindingBehavior : Behavior<HelixViewport3D>
 {
     public static readonly DependencyProperty CameraProperty =

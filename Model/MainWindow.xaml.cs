@@ -33,10 +33,11 @@ public partial class MainWindow : Window
         {
             Helix.Camera = manipCamera.Orbite;
         }
+
     }
 
     /// <summary>
-    /// ajout de la méthode AttachMouseTracking pour attacher correctement MouseMouve
+    /// Routage vers <i:Interaction.Triggers>
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>

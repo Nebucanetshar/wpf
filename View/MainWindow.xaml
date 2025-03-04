@@ -21,14 +21,14 @@
    
         <Grid>
         <h:HelixViewport3D x:Name="Helix">
-            
-            <i:Interaction.Behaviors>
-                <p:BindingBehavior Camera="{Binding Data.Orbite, Source={StaticResource proxy}}"/>
-            </i:Interaction.Behaviors>
+
+            <h:SunLight/>
+            <h:GridLinesVisual3D Length="7" Width="7" MinorDistance="1" MajorDistance="1"/>
+            <h:SphereVisual3D Center="0,0,1.5" Radius="1.5"/>
 
             <i:Interaction.Triggers>
-                <i:EventTrigger EventName="LeftButtonDown">
-                    <i:InvokeCommandAction Command="{Binding ClicDown}" 
+                <i:EventTrigger EventName="PreviewMouseDown">
+                    <i:InvokeCommandAction Command="{Binding ClicDownLeft}" 
                                            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window},Path=(p:MouseHelper.MousePosition)}"/>
                 </i:EventTrigger>
                 <i:EventTrigger EventName="MouseMove">
@@ -36,15 +36,19 @@
                                            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window},Path=(p:MouseHelper.MousePosition)}"/>
                 </i:EventTrigger>
                 <i:EventTrigger EventName="LeftButtonUp">
-                    <i:InvokeCommandAction Command="{Binding ClicUp}"
+                    <i:InvokeCommandAction Command="{Binding ClicUpLeft}"
                                            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window},Path=(p:MouseHelper.MousePosition)}"/>
                 </i:EventTrigger>
             </i:Interaction.Triggers>
 
-          
-            <h:SunLight/>
-            <h:GridLinesVisual3D Length="7" Width="7" MinorDistance="1" MajorDistance="1"/>
-            <h:SphereVisual3D Center="0,0,1.5" Radius="1.5"/>
+            <i:Interaction.Behaviors>
+                <p:BindingBehavior Camera="{Binding Data.Orbite, Source={StaticResource proxy}}"/>
+            </i:Interaction.Behaviors>
+
+
+            
+            
+            
         </h:HelixViewport3D>
     </Grid>
 </Window>

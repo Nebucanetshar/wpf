@@ -5,7 +5,7 @@ using System.Windows.Media.Media3D;
 namespace WPF_PROXY;
 
 /// <summary>
-/// création d'une Attached Property car la propriété camera du type HelixViewport3D ne peut pas utilisé {Binding} directement
+/// création d'une Attached Property car la propriété Camera de "http://helix-toolkit.org/wpf" effectue que des binding proxy
 /// </summary>
 public class BindingProxy : Freezable
 {

@@ -1,11 +1,8 @@
 using Sphère_MVVM;
-using WPF_MAN;
+using WPF_MOVE;
 using WPF_PROXY;
-
-
 using System.Text;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -14,6 +11,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using HelixToolkit.Wpf;
+using WPF_PROJ;
+
+
 
 namespace WPF3D_MVVM;
 
@@ -25,13 +25,15 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-        DataContext = new ManipCamera();
-       
-       // acces a une instance de ManipCamera depuis BindingProxy pour lier Helix.Camera 
+        
+        Mouvement move = new Mouvement(0,0);
+        this.DataContext = move;
+
+        // accès à une instance du BindingProxy depuis Mouvement pour lier Helix.Camera 
         var proxy = (BindingProxy)FindResource("proxy");
-        if(proxy?.Data is ManipCamera manipCamera)
+        if(proxy?.Data is Mouvement orbital)
         {
-            Helix.Camera = manipCamera.Orbite;
+            Helix.Camera = ProjectionConverter.ConvertToCamera(orbital.Orbite);
         }
 
     }

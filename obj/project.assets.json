@@ -7372,11 +7372,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\user\\source\\VisualStudio\\c#\\test\\front\\wpf\\wpf.csproj",
+      "projectUniqueName": "C:\\Users\\user\\source\\visualStudio\\c#\\test\\front\\wpf\\wpf.csproj",
       "projectName": "wpf",
-      "projectPath": "C:\\Users\\user\\source\\VisualStudio\\c#\\test\\front\\wpf\\wpf.csproj",
+      "projectPath": "C:\\Users\\user\\source\\visualStudio\\c#\\test\\front\\wpf\\wpf.csproj",
       "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\user\\source\\VisualStudio\\c#\\test\\front\\wpf\\obj\\",
+      "outputPath": "C:\\Users\\user\\source\\visualStudio\\c#\\test\\front\\wpf\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\user\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -7448,12 +7448,6 @@
     }
   },
   "logs": [
-    {
-      "code": "NU1900",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Une erreur s’est produite lors de l’obtention des données de vulnérabilité du package : Impossible de charger l'index de service pour la source https://api.nuget.org/v3/index.json."
-    },
     {
       "code": "NU1701",
       "level": "Warning",

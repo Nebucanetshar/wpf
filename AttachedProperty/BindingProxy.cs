@@ -1,6 +1,7 @@
 ﻿using HelixToolkit.Wpf;
 using System.Windows;
 using System.Windows.Media.Media3D;
+using WPF_PROJ;
 
 namespace WPF_PROXY;
 
@@ -12,7 +13,7 @@ public class BindingProxy : Freezable
     public static readonly DependencyProperty DataProperty =
         DependencyProperty.Register(
             nameof(Data),
-            typeof(object),  
+            typeof(Projection),  
             typeof(BindingProxy), 
             new UIPropertyMetadata(null));
 

@@ -13,7 +13,7 @@ public class BindingProxy : Freezable
     public static readonly DependencyProperty DataProperty =
         DependencyProperty.Register(
             nameof(Data),
-            typeof(Projection),  
+            typeof(object),  
             typeof(BindingProxy), 
             new UIPropertyMetadata(null));
 

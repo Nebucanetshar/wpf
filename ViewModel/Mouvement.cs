@@ -36,6 +36,8 @@ public class Mouvement : Projection, INotifyPropertyChanged
         }
     }
 
+    public Mouvement() { }
+
     public Mouvement(double wu, double wv)
     {
         Orbite = new Projection

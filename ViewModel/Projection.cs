@@ -1,4 +1,5 @@
-﻿using System.Windows.Media.Media3D;
+﻿using System.Diagnostics;
+using System.Windows.Media.Media3D;
 
 namespace WPF_PROJ;
 
@@ -16,30 +17,21 @@ public class Projection
     public Vector3D Position
     {
         get => _position;
-        set
-        {
-            Position = M();
-        }
+        set => _position = value;
     }
 
     private Vector3D _longitude;
     public Vector3D Longitude
     {
         get => _longitude;
-        set
-        {
-            Longitude = Phi(Zm, Om);
-        }
+        set => _longitude = value;
     }
 
     private Vector3D _latitude;
     public Vector3D Latitude
     {
         get => _latitude;
-        set
-        {
-            Latitude = Theta(Xm, Ym);
-        }
+        set => _latitude = value;
     }
 
     public Projection() { }
@@ -79,7 +71,7 @@ public class Projection
     /// </summary>
    public Vector3D M()
     {
-        _position = Vector3D.CrossProduct(_latitude,_longitude);
+        _position = Vector3D.CrossProduct(_latitude, _longitude);
         return _position;
     }
 }

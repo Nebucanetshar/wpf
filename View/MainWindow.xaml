@@ -28,7 +28,7 @@
             
             <h:SunLight/>
             <h:GridLinesVisual3D Length="7" Width="7" MinorDistance="1" MajorDistance="1"/>
-            <h:SphereVisual3D Center="{Binding Target}"  Radius="0.5"/>
+            <h:SphereVisual3D Center="{Binding Point}"  Radius="0.5"/>
 
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="PreviewMouseDown">

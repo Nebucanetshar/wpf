@@ -15,6 +15,7 @@ namespace WPF_MOVE;
 public class Mouvement : Projection, INotifyPropertyChanged
 {
     private Projection _orbite;
+    
     public Projection Orbite
     {
         get => _orbite;
@@ -24,6 +25,11 @@ public class Mouvement : Projection, INotifyPropertyChanged
             OnPropertyChanged(nameof(Orbite));
         }
     }
+
+    /// <summary>
+    /// conversion de la cible en point 
+    /// </summary>
+    public Point3D Point => new Point3D(Target.X, Target.Y, Target.Z);
     private Vector3D _target;
     public Vector3D Target
     {
@@ -32,7 +38,9 @@ public class Mouvement : Projection, INotifyPropertyChanged
         {
             _target = value;
             Orbite.Longitude = _target - Orbite.Position;
+            
             OnPropertyChanged(nameof(Target));
+            OnPropertyChanged(nameof(Point));
         }
     }
 
@@ -43,8 +51,8 @@ public class Mouvement : Projection, INotifyPropertyChanged
         Orbite = new Projection
         {
             Position = new Vector3D(0, 1, 0),
-            Latitude = new Vector3D(0, 0, wv),
-            Longitude = new Vector3D(wu, 0, 0)
+            Latitude = new Vector3D(0, -1, wv),
+            Longitude = new Vector3D(wu, -1, 0)
         };
     }
 

@@ -1,4 +1,5 @@
 ﻿using GalaSoft.MvvmLight.Messaging;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
 
@@ -9,32 +10,63 @@ namespace WPF_PROXY;
 /// </summary>
 public static class MouseHelper
 {
-    public static readonly DependencyProperty MousePositionProperty =
+    #region Command
+    public static readonly DependencyProperty CommandProperty =
         DependencyProperty.RegisterAttached(
-            "MousePosition", // nom de la propriété 
-            typeof(Point), // type de la propriété 
+            "MouseProperty", // nom de la propriété 
+            typeof(ICommand), // type de la propriété 
             typeof(MouseHelper), //type propriétaire
-            new PropertyMetadata(new Point(0, 0))); //valeur par default 
+            new PropertyMetadata(null)); //valeur par default 
 
-    /// <summary>
-    /// affecte une nouvelle position de la souris à un élément
-    /// </summary>
-    /// <param name="element"></param>
-    /// <returns></returns>
-    public static Point GetMousePosition(UIElement element)
+    
+    public static ICommand GetCommand(UIElement element)
     {
-        return (Point)element.GetValue(MousePositionProperty);
+        return (ICommand)element.GetValue(CommandProperty);
     }
-    /// <summary>
-    /// definie la nouvelle position
-    /// </summary>
-    /// <param name="element"></param>
-    /// <param name="value"></param>
-    public static void SetMousePosition(UIElement element,Point value)
+   
+    public static void SetCommand(UIElement element,ICommand value)
     {
-        element.SetValue(MousePositionProperty, value);
+        try
+        {
+            element.SetValue(CommandProperty,value);
+        }
+        catch (Exception ex)
+        {
+            Trace.TraceInformation($"Command MouseProperty: {ex.Message}");
+        }
+        
+    }
+    #endregion
+
+    #region CommandParameter
+    public static readonly DependencyProperty CommandParameterProperty =
+        DependencyProperty .RegisterAttached(
+            "MouseParameter",
+            typeof(object),
+            typeof(MouseHelper),
+            new PropertyMetadata(null));
+
+    public static bool GetCommandParameter(UIElement element)
+    {
+        return (bool)element.GetValue(CommandParameterProperty);
     }
 
+    public static void SetCommandParameter(UIElement element, object value)
+    {
+        try
+        {
+            element.SetValue(CommandParameterProperty,value);
+        }
+        catch (Exception ex)
+        {
+            Trace.TraceInformation($"CommandParameter MouseParameter:{ex.Message}");
+        }
+        
+       
+    }
+    #endregion
+
+    #region AttachTracking
     /// <summary>
     /// capture la position de la souris et MAJ l'attached Property
     /// </summary>
@@ -44,13 +76,18 @@ public static class MouseHelper
     {
         if (sender is UIElement element)
         {
-            Point position = e.GetPosition(element);
-            SetMousePosition(element, position);
+            ICommand command = GetCommand(element);
+            bool commandParameter = GetCommandParameter(element);
+
+            if( command != null && command.CanExecute(commandParameter))
+            {
+                command.Execute(commandParameter);
+            }
         }
     }
 
     /// <summary>
-    /// Configuration du routage pour la vue
+    /// Configuration du routage pour la vue 
     /// </summary>
     /// <param name="element"></param>
     public static void AttachMouseTracking(UIElement element)
@@ -62,6 +99,5 @@ public static class MouseHelper
 
         }
     }
-
-   
+    #endregion
 }

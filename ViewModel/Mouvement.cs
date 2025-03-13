@@ -39,7 +39,6 @@ public class Mouvement : Projection, INotifyPropertyChanged
             _target = value;
             Orbite.Longitude = _target - Orbite.Position;
             
-            OnPropertyChanged(nameof(Target));
             OnPropertyChanged(nameof(Point));
         }
     }
@@ -51,22 +50,10 @@ public class Mouvement : Projection, INotifyPropertyChanged
         Orbite = new Projection
         {
             Position = new Vector3D(0, 1, 0),
-            Latitude = new Vector3D(0, -1, wv),
-            Longitude = new Vector3D(wu, -1, 0)
+            Longitude = new Vector3D(0, -1, wv),
+            Latitude = new Vector3D(wu, -1, 0)
+            
         };
-    }
-
-    /// <summary>
-    /// animation du produit vectoriel selon la variation de phi et theta 
-    /// pour avoir une distance de deplacement sphérique (orbital) U^V = Wu * Wv
-    /// </summary>
-    /// <param name="p1"></param>
-    /// <param name="p2"></param>
-    /// <param name="p3"></param>
-    /// <param name="p4"></param>
-    public void OrbitalAnimation(Point3D Zm, Point3D Om, Point3D Xm, Point3D Ym)
-    {
-       
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;

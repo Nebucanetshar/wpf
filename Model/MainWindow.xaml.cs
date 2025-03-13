@@ -12,6 +12,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using HelixToolkit.Wpf;
 using WPF_PROJ;
+using WPF_CONTROL;
 
 
 
@@ -29,13 +30,12 @@ public partial class MainWindow : Window
         Mouvement move = new Mouvement(0,0);
         this.DataContext = move;
 
-        // accès à une instance du BindingProxy depuis Mouvement pour lier Helix.Camera 
+        // permet la conversion de Mouvement.Orbite avec celui d'Helix.Camera 
         var proxy = (BindingProxy)FindResource("proxy");
         if(proxy?.Data is Mouvement orbital)
         {
             Helix.Camera = ProjectionConverter.ConvertToCamera(orbital.Orbite);
         }
-
     }
 
     /// <summary>

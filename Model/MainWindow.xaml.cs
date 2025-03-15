@@ -26,8 +26,9 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+        //Loaded += OnViewportLoaded;
         
-        Mouvement move = new Mouvement(0,0);
+        Mouvement move = new Mouvement();
         this.DataContext = move;
 
         // permet la conversion de Mouvement.Orbite avec celui d'Helix.Camera 
@@ -43,7 +44,7 @@ public partial class MainWindow : Window
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private void OnViewportLoaded(object sender, RoutedEventArgs e)
+    public void OnViewportLoaded(object sender, RoutedEventArgs e)
     {
         MouseHelper.AttachMouseTracking(Helix);
     }

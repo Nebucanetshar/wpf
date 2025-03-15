@@ -44,7 +44,7 @@ public static class MouseHelper
             "MouseParameter",
             typeof(object),
             typeof(MouseHelper),
-            new PropertyMetadata(null));
+            new PropertyMetadata(false));
 
     public static bool GetCommandParameter(UIElement element)
     {
@@ -53,49 +53,42 @@ public static class MouseHelper
 
     public static void SetCommandParameter(UIElement element, object value)
     {
-        try
-        {
-            element.SetValue(CommandParameterProperty,value);
-        }
-        catch (Exception ex)
-        {
-            Trace.TraceInformation($"CommandParameter MouseParameter:{ex.Message}");
-        }
-        
-       
+       element.SetValue(CommandParameterProperty,value);
     }
     #endregion
 
     #region AttachTracking
     /// <summary>
-    /// capture la position de la souris et MAJ l'attached Property
+    /// Permet de savoir si la command peut-êre éxecuté avec le boolean a true donnée dans CommandParameter avec l'accesseur Animate
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    public static void UpdateMousePosition(object sender, MouseEventArgs e)
+    public static void UpdateMouse(object sender, MouseEventArgs e)
     {
         if (sender is UIElement element)
         {
             ICommand command = GetCommand(element);
             bool commandParameter = GetCommandParameter(element);
 
-            if( command != null && command.CanExecute(commandParameter))
+            if (command != null && command.CanExecute(commandParameter))
             {
                 command.Execute(commandParameter);
             }
+
+            Trace.TraceInformation($"UIElement commandParameter: {commandParameter}");
         }
     }
 
     /// <summary>
-    /// Configuration du routage pour la vue 
+    /// Configuration du routage pour la vue évite un event de spam 
     /// </summary>
     /// <param name="element"></param>
     public static void AttachMouseTracking(UIElement element)
     {
         if (element != null)
         {
-            element.MouseMove -= UpdateMousePosition;
-            element.MouseMove += UpdateMousePosition;
+            element.PreviewMouseLeftButtonDown += UpdateMouse;
+            element.PreviewMouseLeftButtonUp -= UpdateMouse;
 
         }
     }

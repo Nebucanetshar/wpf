@@ -8,7 +8,6 @@
         xmlns:m="clr-namespace:WPF_MOVE"
         xmlns:c="clr-namespace:WPF_CONTROL"
         
-        
         Title="MainWindow" Height="450" Width="800">
 
     <Window.Resources>
@@ -18,10 +17,9 @@
     <Window.DataContext>
         <m:Mouvement/>
     </Window.DataContext>
-    
-   
+
         <Grid>
-        <h:HelixViewport3D x:Name="Helix">
+        <h:HelixViewport3D x:Name="Helix" Loaded="OnViewportLoaded">
 
             <i:Interaction.Behaviors>
                 <p:BindingBehavior Camera="{Binding Data.Orbite, Source={StaticResource proxy}}"/>
@@ -32,9 +30,9 @@
             <h:SphereVisual3D Center="{Binding Point}"  Radius="0.5"/>
 
             <i:Interaction.Triggers>
-                <i:EventTrigger EventName="OrbitalAnimation">
+                <i:EventTrigger EventName="MouseDown">
                     <i:InvokeCommandAction Command="{Binding Source={x:Static c:Control.Instance}, Path=Marche}" 
-                                           CommandParameter="True"/>
+                                           CommandParameter="{Binding Animate}"/>
                 </i:EventTrigger>
             </i:Interaction.Triggers>
             

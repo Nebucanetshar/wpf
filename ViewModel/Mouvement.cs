@@ -14,8 +14,11 @@ namespace WPF_MOVE;
 
 public class Mouvement : Projection, INotifyPropertyChanged
 {
+
+    public double _wu = 0;
+    public double _wv = 0;
+
     private Projection _orbite;
-    
     public Projection Orbite
     {
         get => _orbite;
@@ -43,17 +46,56 @@ public class Mouvement : Projection, INotifyPropertyChanged
         }
     }
 
-    public Mouvement() { }
+    private bool _animate;
+    public bool Animate
+    {
+        get => _animate;
+        set
+        {
+            _animate = value;
+            OnPropertyChanged(nameof(Animate));
+        }
+    }
 
-    public Mouvement(double wu, double wv)
+    public Mouvement()
     {
         Orbite = new Projection
         {
             Position = new Vector3D(0, 1, 0),
-            Longitude = new Vector3D(0, -1, wv),
-            Latitude = new Vector3D(wu, -1, 0)
-            
+            Longitude = new Vector3D(0, -1, 0),
+            Latitude = new Vector3D(0, -1, 0)
         };
+    }
+
+    /// <summary>
+    /// motorise le produit vectoriel selon la variation de phi et theta 
+    /// pour avoir une distance de deplacement sphérique (orbital) U^V = Wu * Wv
+    /// </summary>
+    private void OnRendering(object sender, EventArgs e)
+    {
+        while (_wu < 6.28 && _wv < 3.14)
+        {
+            _wu += 0.01;
+            _wv += 0.01;
+
+            Orbite = new Projection
+            {
+                Position = new Vector3D(0, 1, 0),
+                Longitude = new Vector3D(0, -1, _wv),
+                Latitude = new Vector3D(_wu, -1, 0)
+            };
+        }
+    }
+
+    public void StartAnimation(bool args)
+    {
+        if (args == true)
+        {
+            CompositionTarget.Rendering += OnRendering;
+        }
+            _animate = args;
+        
+        Trace.TraceInformation($"animation trigger: {args}");
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;

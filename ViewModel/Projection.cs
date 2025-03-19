@@ -67,9 +67,9 @@ public class Projection
     }
 
     /// <summary>
-    /// la position correspond au produit vectoriel de Theta et Phi
+    /// la position illustre la variation du produit vectoriel de U^V = Wu * Wv
     /// </summary>
-   public Vector3D M()
+    public Vector3D M()
     {
         _position = Vector3D.CrossProduct(_latitude, _longitude);
         return _position;

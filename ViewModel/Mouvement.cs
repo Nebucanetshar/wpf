@@ -39,9 +39,7 @@ public class Mouvement : Projection, INotifyPropertyChanged
         get => _target;
         set
         {
-            _target = value;
             Orbite.Longitude = _target - Orbite.Position;
-            
             OnPropertyChanged(nameof(Point));
         }
     }
@@ -68,8 +66,7 @@ public class Mouvement : Projection, INotifyPropertyChanged
     }
 
     /// <summary>
-    /// motorise le produit vectoriel selon la variation de phi et theta 
-    /// pour avoir une distance de deplacement sphérique (orbital) U^V = Wu * Wv
+    /// motorise la projection créant une distance de déplacement sphérique (orbital) 
     /// </summary>
     private void OnRendering(object sender, EventArgs e)
     {
@@ -87,15 +84,15 @@ public class Mouvement : Projection, INotifyPropertyChanged
         }
     }
 
-    public void StartAnimation(bool args)
+    public void StartAnimation(bool type)
     {
-        if (args == true)
+        if (type == true)
         {
             CompositionTarget.Rendering += OnRendering;
         }
-            _animate = args;
+            _animate = type;
         
-        Trace.TraceInformation($"animation trigger: {args}");
+        Trace.TraceInformation($"commandParameter EventArgs: {type}");
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;

@@ -20,11 +20,7 @@ public class Control : Mouvement
     #endregion 
 
     #region Command Orbital
-    /// <summary>
-    /// séparé la propriété du type d'instanciation pour implémenté une méthode d'héritage
-    /// </summary>
-    private readonly RelayCommand<bool> _marche;
-    public ICommand Marche => _marche;
+    public ICommand Marche { get; }
     
     #endregion
 
@@ -35,12 +31,11 @@ public class Control : Mouvement
     /// </summary>
     public Control()
     {
-        _marche = new RelayCommand<bool>(param =>
+        Marche = new RelayCommand<bool>(element =>
         {
-            if (param is bool value)
+            if (element is bool type)
             {
                 StartAnimation(true);
-                _marche.RaiseCanExecuteChanged(); // switch du boolean !!
             }
         });
     }

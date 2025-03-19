@@ -63,9 +63,9 @@ public static class MouseHelper
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    public static void UpdateMouse(object sender, MouseEventArgs e)
+    public static void UpdateMouse(object clic, MouseEventArgs e)
     {
-        if (sender is UIElement element)
+        if (clic is UIElement element)
         {
             ICommand command = GetCommand(element);
             bool commandParameter = GetCommandParameter(element);
@@ -75,7 +75,7 @@ public static class MouseHelper
                 command.Execute(commandParameter);
             }
 
-            Trace.TraceInformation($"UIElement commandParameter: {commandParameter}");
+            Trace.TraceInformation($"commandParameter MouseEventArgs: {commandParameter}");
         }
     }
 

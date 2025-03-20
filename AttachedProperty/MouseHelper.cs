@@ -63,9 +63,9 @@ public static class MouseHelper
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    public static void UpdateMouse(object clic, MouseEventArgs e)
+    public static void UpdateMouse(object sender, MouseEventArgs e)
     {
-        if (clic is UIElement element)
+        if (sender is UIElement element)
         {
             ICommand command = GetCommand(element);
             bool commandParameter = GetCommandParameter(element);
@@ -80,7 +80,7 @@ public static class MouseHelper
     }
 
     /// <summary>
-    /// Configuration du routage pour la vue évite un event de spam 
+    /// Configuration du routage de la commande pour la vue évite un event de spam 
     /// </summary>
     /// <param name="element"></param>
     public static void AttachMouseTracking(UIElement element)

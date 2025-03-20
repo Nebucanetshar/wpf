@@ -19,7 +19,7 @@
     </Window.DataContext>
 
         <Grid>
-        <h:HelixViewport3D x:Name="Helix" Loaded="OnViewportLoaded">
+        <h:HelixViewport3D x:Name="Helix">
 
             <i:Interaction.Behaviors>
                 <p:BindingBehavior Camera="{Binding Data.Orbite, Source={StaticResource proxy}}"/>

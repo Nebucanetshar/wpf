@@ -26,16 +26,14 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-        //Loaded += OnViewportLoaded;
         
-        Mouvement move = new Mouvement();
-        this.DataContext = move;
+        DataContext = new Mouvement();
 
-        // permet la conversion de Mouvement.Orbite avec celui d'Helix.Camera 
+        // permet la conversion de ma projection avec celui d'Helix.ProjectionCamera 
         var proxy = (BindingProxy)FindResource("proxy");
-        if(proxy?.Data is Mouvement orbital)
+        if(proxy?.Data is Mouvement convert)
         {
-            Helix.Camera = ProjectionConverter.ConvertToCamera(orbital.Orbite);
+            Helix.Camera = ProjectionConverter.ConvertToCamera(convert.Orbite);
         }
     }
 

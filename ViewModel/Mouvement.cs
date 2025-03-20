@@ -14,10 +14,6 @@ namespace WPF_MOVE;
 
 public class Mouvement : Projection, INotifyPropertyChanged
 {
-
-    public double _wu = 0;
-    public double _wv = 0;
-
     private Projection _orbite;
     public Projection Orbite
     {
@@ -66,22 +62,16 @@ public class Mouvement : Projection, INotifyPropertyChanged
     }
 
     /// <summary>
-    /// motorise la projection créant une distance de déplacement sphérique (orbital) 
+    /// motorise la projection créant une distance de déplacement sphérique (orbital) logique asynchrone pour MAJ thread UI
     /// </summary>
     private void OnRendering(object sender, EventArgs e)
     {
-        while (_wu < 6.28 && _wv < 3.14)
+        Orbite = new Projection
         {
-            _wu += 0.01;
-            _wv += 0.01;
+            Position = Vector3D.CrossProduct(Longitude,Latitude)
+        };
 
-            Orbite = new Projection
-            {
-                Position = new Vector3D(0, 1, 0),
-                Longitude = new Vector3D(0, -1, _wv),
-                Latitude = new Vector3D(_wu, -1, 0)
-            };
-        }
+        OnPropertyChanged(nameof(Orbite));
     }
 
     public void StartAnimation(bool type)
@@ -90,8 +80,8 @@ public class Mouvement : Projection, INotifyPropertyChanged
         {
             CompositionTarget.Rendering += OnRendering;
         }
-            _animate = type;
-        
+
+        _animate = type;
         Trace.TraceInformation($"commandParameter EventArgs: {type}");
     }
 

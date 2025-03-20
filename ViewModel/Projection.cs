@@ -1,17 +1,18 @@
 ﻿using System.Diagnostics;
+using System.DirectoryServices.ActiveDirectory;
 using System.Windows.Media.Media3D;
 
 namespace WPF_PROJ;
 
 /// <summary>
-/// 
+/// il faut incrémenté les points de -1 à 1 
 /// </summary>
-public class Projection 
+public class Projection
 {
-    public Point3D Zm;
-    public Point3D Om;
-    public Point3D Xm;
-    public Point3D Ym;
+    Point3D[] Xm;
+    Point3D[] Ym;
+    Point3D[] Zm;
+    Point3D[] Om;
 
     private Vector3D _position;
     public Vector3D Position
@@ -28,46 +29,90 @@ public class Projection
     }
 
     private Vector3D _latitude;
-    public Vector3D Latitude
+    public  Vector3D Latitude
     {
         get => _latitude;
         set => _latitude = value;
     }
 
-    public Projection() { }
-   
-    /// <summary>
-    /// vecteur directionnel de p1 vers p2 autour de z (horizontal de la scène)
-    /// </summary>
-    /// <param name="p1"></param>
-    /// <param name="p2"></param>
-    public Vector3D Phi(Point3D p1, Point3D p2)
+    public Projection()
     {
-       double dx = p2.X - p1.X;
-       double dy = p2.Y - p1.Y;
-
-       double azimuth = Math.Atan2(dx, dy);
-        
-        return _longitude = new Vector3D(0, 0, azimuth);
+        Phi(Xm,Ym);
+        Theta(Zm,Om);
+        M();
     }
 
     /// <summary>
-    /// vecteur directionnel de p2 vers p4 autour de x (vertical de la scène)
+    /// vecteur directionnel autour de l'axe z (horizontal de la scène)
     /// </summary>
-    /// <param name="p3"></param>
-    /// <param name="p4"></param>
-    public Vector3D Theta(Point3D p3, Point3D p4)
+    /// <param name="p1"> point de départ </param>
+    /// <param name="p2"> point d'arriver </param>
+    public Vector3D Phi(Point3D[] p1, Point3D[] p2)
     {
-       double z = p4.Z - p3.Z;
-       double r = p4.Y - p3.Y;
-        
-       double polaire = Math.Acos(z/r);
-        
-        return _latitude = new Vector3D(polaire, 0, 0);
+        int i = -1;
+        int j = 1;
+
+        while ( i > 1 && j < -1)
+        {
+            //variation du point selon l'axe x et y 
+            double dx = p2[i].X - p1[j].X;
+            double dy = p2[i].Y - p1[j].Y;
+
+            i += 1 / 100;
+            j -= 1 / 100;
+
+            //configuration de l'angle phi 
+            double azimuth = Math.Atan2(dx, dy);
+
+            //projection de l'angle sur l'axe x et y 
+            double r = 1.0;
+            double x = r * Math.Cos(azimuth);
+            double y = r * Math.Sin(azimuth);
+
+            _longitude = new Vector3D(x, y, 0);
+            
+            Trace.TraceInformation($"points de phi: {p2[i].X},{p1[i].X}");
+        }
+
+        return _longitude;
     }
 
     /// <summary>
-    /// la position illustre la variation du produit vectoriel de U^V = Wu * Wv
+    /// vecteur directionnel autour de l'axe x (vertical de la scène)
+    /// </summary>
+    /// <param name="p3"> point de départ </param>
+    /// <param name="p4"> point d'arriver </param>
+    public Vector3D Theta(Point3D[] p3, Point3D[] p4)
+    {
+        int i = -1;
+        int j = 1;
+
+        while ( i < 1 && j < -1)
+        {
+            //variation du point selon l'axe z, r est la magnitude unitaire 
+            double dz = p4[i].Z - p3[j].Z;
+
+            i += 1 / 100;
+            j -= 1 / 100;
+
+            double r = 1.0;
+
+            //configuration de l'angle polaire
+            double polaire = Math.Acos(dz / r);
+
+            //projection de l'angle sur l'axe z et y 
+            double z = r * Math.Cos(polaire);
+            double y = r * Math.Sin(polaire);
+
+            _latitude = new Vector3D(0, y, z);
+
+        }
+
+        return _latitude;
+    }
+
+    /// <summary>
+    /// la position illustre le produit vectoriel de U^V = Wu * Wv
     /// </summary>
     public Vector3D M()
     {

@@ -9,10 +9,10 @@ namespace WPF_PROJ;
 /// </summary>
 public class Projection
 {
-    Point3D[] Xm;
-    Point3D[] Ym;
-    Point3D[] Zm;
-    Point3D[] Om;
+    Point3D[] Xm = new Point3D[10];
+    Point3D[] Ym = new Point3D[10];
+    Point3D[] Zm = new Point3D[10];
+    Point3D[] Om = new Point3D[10];
 
     private Vector3D _position;
     public Vector3D Position
@@ -37,9 +37,8 @@ public class Projection
 
     public Projection()
     {
-        Phi(Xm,Ym);
-        Theta(Zm,Om);
-        M();
+        Longitude = Phi(Xm, Ym);
+        Latitude = Theta(Zm, Om);
     }
 
     /// <summary>
@@ -49,17 +48,19 @@ public class Projection
     /// <param name="p2"> point d'arriver </param>
     public Vector3D Phi(Point3D[] p1, Point3D[] p2)
     {
-        int i = -1;
-        int j = 1;
+        double t = -1.0;
 
-        while ( i > 1 && j < -1)
+        while(t  <= 1.0)
         {
-            //variation du point selon l'axe x et y 
-            double dx = p2[i].X - p1[j].X;
-            double dy = p2[i].Y - p1[j].Y;
+            //conversion de t dans l'indice de tableau avec la formule ((t+1)/2) * (n-1) pour mapper un intervale [-1;1] vers un intervalle [0;n-1]
+            int i = (int)((t + 1.0) / 2.0) * (p1.Length -1);
+            int j = (int)((t + 1.0) / 2.0) * (p2.Length -1);
 
-            i += 1 / 100;
-            j -= 1 / 100;
+            //variation du point selon l'axe x et y 
+            double dx = p2[j].X - p1[i].X;
+            double dy = p2[j].Y - p1[i].Y;
+            
+            t += 0.01;
 
             //configuration de l'angle phi 
             double azimuth = Math.Atan2(dx, dy);
@@ -70,8 +71,8 @@ public class Projection
             double y = r * Math.Sin(azimuth);
 
             _longitude = new Vector3D(x, y, 0);
-            
-            Trace.TraceInformation($"points de phi: {p2[i].X},{p1[i].X}");
+
+            Trace.TraceInformation($"phi sur x: {p2[i].X},{p1[i].X}, phi sur y: {p2[i].Y}, {p1[i].Y}");
         }
 
         return _longitude;
@@ -84,18 +85,19 @@ public class Projection
     /// <param name="p4"> point d'arriver </param>
     public Vector3D Theta(Point3D[] p3, Point3D[] p4)
     {
-        int i = -1;
-        int j = 1;
+        double t = -1.0;
 
-        while ( i < 1 && j < -1)
+        while ( t <= 1.0)
         {
+            //conversion de type double en int dû à l'utilisation d'un tableau pour mapper un intervalle [-1;1] 
+            int i = (int)((t + 1.0) / 2.0) * (p3.Length - 1);
+            int j = (int)((t + 1.0) / 2.0) * (p4.Length - 1);
+
             //variation du point selon l'axe z, r est la magnitude unitaire 
             double dz = p4[i].Z - p3[j].Z;
-
-            i += 1 / 100;
-            j -= 1 / 100;
-
             double r = 1.0;
+
+            t += 0.01;
 
             //configuration de l'angle polaire
             double polaire = Math.Acos(dz / r);
@@ -106,6 +108,7 @@ public class Projection
 
             _latitude = new Vector3D(0, y, z);
 
+            Trace.TraceInformation($"theta sur x: {p4[i].X},{p4[i].X}, theta sur y: {p3[i].Y}, {p3[i].Y}");
         }
 
         return _latitude;

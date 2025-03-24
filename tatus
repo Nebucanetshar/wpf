@@ -1,0 +1,113 @@
+[33mcommit 748df2d9ee677b0182e8fdf424656dc6ed5d8306[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mabo-wpf012[m[33m, [m[1;31morigin/abo-wpf012[m[33m)[m
+Author: nebucanetshar <alhannb@hotmail.com>
+Date:   Sun Mar 23 19:57:42 2025 +0100
+
+    eternal boucle to phi angle and theta angle no stop with value to zeros
+
+[33mcommit a86d877d19b579e10d19bd8f999410b9570bc620[m[33m ([m[1;31morigin/abo-wpf011[m[33m, [m[1;32mabo-wpf011[m[33m)[m
+Author: nebucanetshar <alhannb@hotmail.com>
+Date:   Thu Mar 20 09:14:38 2025 +0100
+
+    refacto Projection.cs
+
+[33mcommit 14ebef7fef8ad5b23ace3ce88a43ac97f294fec6[m[33m ([m[1;31morigin/abo-wpf010[m[33m, [m[1;32mabo-wpf010[m[33m)[m
+Author: nebucanetshar <alhannb@hotmail.com>
+Date:   Wed Mar 19 15:23:36 2025 +0100
+
+    MouseEvenArgs is false then EvenArgs is True, always none animation
+
+[33mcommit a2ba5ea9d04a3954eb38d8ecd34ccb7d7343f920[m
+Author: nebucanetshar <alhannb@hotmail.com>
+Date:   Sat Mar 15 11:55:35 2025 +0100
+
+    problem with CanExecute dosen't return true
+
+[33mcommit bd6c5e77b37d7068f9d481735366097a91f855a5[m
+Author: nebucanetshar <alhannb@hotmail.com>
+Date:   Thu Mar 13 14:40:11 2025 +0100
+
+    none react with Event.Trigger for animate move motor
+
+[33mcommit 65d99e8a8297915e23559296034390575d38957b[m[33m ([m[1;32mabo-wpf009[m[33m)[m
+Author: nebucanetshar <alhannb@hotmail.com>
+Date:   Wed Mar 12 10:53:05 2025 +0100
+
+     target is ready with my projection
+
+[33mcommit 6fb4308860dc7b9dc682bb22c94151b8a63bb5aa[m[33m ([m[1;31morigin/abo-wpf009[m[33m)[m
+Author: nebucanetshar <alhannb@hotmail.com>
+Date:   Wed Mar 12 09:12:16 2025 +0100
+
+    get the camera but dosen't target 3DModels
+
+[33mcommit 192429db2a1082b387f8bb4a8c80c63e176c0ec8[m[33m ([m[1;31morigin/abo-wpf008[m[33m, [m[1;32mabo-wpf008[m[33m)[m
+Author: nebucanetshar <alhannb@hotmail.com>
+Date:   Sat Mar 8 09:07:12 2025 +0100
+
+    refacto ViewModel
+
+[33mcommit b8c878482ae8b12de4f489200d38465e08cf7d0f[m
+Author: nebucanetshar <alhannb@hotmail.com>
+Date:   Thu Mar 6 17:00:39 2025 +0100
+
+    added coordinate between Model3D and Target.Camera
+
+[33mcommit 0775b696bb2b9ab84d25e356df7c3ac0a6094cf4[m[33m ([m[1;31morigin/abo-wpf007[m[33m)[m
+Author: nebucanetshar <alhannb@hotmail.com>
+Date:   Tue Mar 4 20:05:00 2025 +0100
+
+    the result was due to forget normalize qz
+
+[33mcommit da7e1398fde2821d8566af6bc502d3bbf7ad25b2[m
+Author: nebucanetshar <alhannb@hotmail.com>
+Date:   Mon Mar 3 15:20:21 2025 +0100
+
+    method OrbitalCameraMove works but does not correspond expected result
+
+[33mcommit 80a3a4686ff153bb33da673041c365573a91e92f[m[33m ([m[1;31morigin/abo-wpf006[m[33m, [m[1;32mabo-wpf006[m[33m)[m
+Author: nebucanetshar <alhannb@hotmail.com>
+Date:   Fri Feb 28 15:08:47 2025 +0100
+
+    attached property for binding works
+
+[33mcommit 69a185227ab735ca84000f56122536a78a47556f[m
+Author: nebucanetshar <alhannb@hotmail.com>
+Date:   Fri Feb 28 10:08:25 2025 +0100
+
+    always with problem move orbital camera but create attached property
+
+[33mcommit 3842b37c6ee41728eaea51b279503d7969d54cc4[m[33m ([m[1;31morigin/abo-wpf005[m[33m, [m[1;32mabo-wpf005[m[33m)[m
+Author: nebucanetshar <alhannb@hotmail.com>
+Date:   Wed Feb 26 17:17:52 2025 +0100
+
+    added move orbital camera but no works
+
+[33mcommit 008407f2ede7cfe2591744452a708c54c68e0a37[m[33m ([m[1;31morigin/abo-wpf004[m[33m, [m[1;32mabo-wpf004[m[33m)[m
+Author: nebucanetshar <alhannb@hotmail.com>
+Date:   Wed Feb 26 12:05:18 2025 +0100
+
+     added move panoramique camera works but only rightClick pressed
+
+[33mcommit 29967b3575e6db755e90c494230c71f1bf22d1ab[m[33m ([m[1;31morigin/abo-wpf003[m[33m, [m[1;32mabo-wpf003[m[33m)[m
+Author: nebucanetshar <alhannb@hotmail.com>
+Date:   Wed Feb 26 09:37:12 2025 +0100
+
+    used staticResource for implemented several object in file.xaml
+
+[33mcommit e78861ef19cb7599dcb65b6ae1f9edd71103d076[m[33m ([m[1;31morigin/abo-wpf002[m[33m, [m[1;32mabo-wpf002[m[33m)[m
+Author: nebucanetshar <alhannb@hotmail.com>
+Date:   Tue Feb 25 15:16:52 2025 +0100
+
+    zoom works but DataContext can't instance only one object
+
+[33mcommit 306aa3c5f923a75bf3480022d05278c4ba4b09a8[m[33m ([m[1;31morigin/abo-wpf001[m[33m, [m[1;32mabo-wpf001[m[33m)[m
+Author: nebucanetshar <alhannb@hotmail.com>
+Date:   Thu Feb 20 17:43:06 2025 +0100
+
+    create viewModel Sphère.cs
+
+[33mcommit f3f9c99fdaf72de213749d4298b7d177f9a664c3[m[33m ([m[1;31morigin/abo-wpf000[m[33m, [m[1;32mabo-wpf000[m[33m)[m
+Author: nebucanetshar <alhannb@hotmail.com>
+Date:   Thu Feb 20 14:30:24 2025 +0100
+
+    first commit

@@ -62,7 +62,7 @@ public class Mouvement : Projection, INotifyPropertyChanged
     }
 
     /// <summary>
-    /// motorise la projection créant une distance de déplacement sphérique (orbital) logique asynchrone pour MAJ thread UI
+    /// motorise la projection créant une distance de déplacement sphérique (orbital) 
     /// </summary>
     private void OnRendering(object sender, EventArgs e)
     {

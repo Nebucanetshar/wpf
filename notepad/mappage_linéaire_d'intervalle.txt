@@ -1,0 +1,70 @@
+using System;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Shapes;
+
+namespace TtoIndexVisualizer
+{
+    public partial class MainWindow : Window
+    {
+        private const int N = 10; // taille du tableau simulé
+        private Line markerLine;
+
+        public MainWindow()
+        {
+            InitializeComponent();
+            DrawScale();
+        }
+
+        private void DrawScale()
+        {
+            for (int i = 0; i < N; i++)
+            {
+                Rectangle rect = new Rectangle
+                {
+                    Width = 30,
+                    Height = 30,
+                    Fill = Brushes.LightBlue,
+                    Stroke = Brushes.Black
+                };
+
+                Canvas.SetLeft(rect, i * 35);
+                Canvas.SetTop(rect, 10);
+                VisualCanvas.Children.Add(rect);
+
+                TextBlock txt = new TextBlock
+                {
+                    Text = i.ToString(),
+                    FontSize = 14
+                };
+
+                Canvas.SetLeft(txt, i * 35 + 10);
+                Canvas.SetTop(txt, 45);
+                VisualCanvas.Children.Add(txt);
+            }
+
+            // Ajout d'une ligne rouge qui indiquera l'index en temps réel
+            markerLine = new Line
+            {
+                Stroke = Brushes.Red,
+                StrokeThickness = 3,
+                Y1 = 0,
+                Y2 = 70
+            };
+
+            VisualCanvas.Children.Add(markerLine);
+        }
+
+        private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            double t = e.NewValue;
+            int i = (int)(((t + 1.0) / 2.0) * (N - 1));
+            IndexLabel.Content = $"t = {t:F2} → i = {i}";
+
+            // Déplace la ligne rouge pour visualiser l'index
+            markerLine.X1 = i * 35 + 15;
+            markerLine.X2 = i * 35 + 15;
+        }
+    }
+}

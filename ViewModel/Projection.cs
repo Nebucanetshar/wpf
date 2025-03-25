@@ -48,31 +48,23 @@ public class Projection
     /// <param name="p2"> point d'arriver </param>
     public Vector3D Phi(Point3D[] p1, Point3D[] p2)
     {
-        double t = -1.0;
+        double t = 0;
         
-       while(t <= 1.0)
+       while(t <= 6.28)
        {
-            //conversion de t dans l'indice de tableau avec la formule ((t+1)/2) * (n-1) pour mapper un intervale [-1;1] vers un intervalle [0;n-1]
-            int i = (int)(((t + 1.0) / 2.0) * (10));
-            int j = (int)(((t + 1.0) / 2.0) * (10));
-
-            //variation du point selon l'axe x et y 
-            double dx = p2[i].X - p1[i].X;
-            double dy = p2[j].Y - p1[j].Y;
-
-            t += 0.1;
-
-            //configuration de l'angle phi 
-            double azimuth = Math.Atan2(dx, dy);
+            t += 0.01;
 
             //projection de l'angle sur l'axe x et y 
             double r = 1.0;
-            double x = r * Math.Cos(azimuth);
-            double y = r * Math.Sin(azimuth);
+            double dx = r * Math.Cos(t);
+            double dy = r * Math.Sin(t);
 
-            _longitude = new Vector3D(x, y, 0);
+            //configuration de l'angle phi 
+            double azimuth = Math.Atan2(dx, dy) * 180 / Math.PI;
 
-            Trace.TraceInformation($" i: {i}, t: {t}, dx: {dx}, dy: {dy}");
+            _longitude = new Vector3D(0, -1, azimuth);
+
+            Trace.TraceInformation($"longitude: {_longitude}");
        }
 
         return _longitude;
@@ -85,29 +77,22 @@ public class Projection
     /// <param name="p2"> point d'arriver </param>
     public Vector3D Theta(Point3D[] p1, Point3D[] p2)
     {
-        double t = -1.0;
+        double t = 0;
 
-        while (t <= 1.0)
+        while (t <= 6.28)
         {
-            //conversion de t dans l'indice de tableau avec la formule ((t+1)/2) * (n-1) pour mapper un intervale [-1;1] vers un intervalle [0;n-1]
-            int k = (int)(((t + 1.0) / 2.0) * (10));
-            
-            //variation du point selon l'axe z, r est la magnitude unitaire 
-            double dz = p2[k].Z - p1[k].Z;
-            double r = 1.0;
-
             t += 0.1;
 
-            //configuration de l'angle polaire
-            double polaire = Math.Acos(dz / r);
-
             //projection de l'angle sur l'axe z et y 
-            double z = r * Math.Cos(polaire);
-            double y = r * Math.Sin(polaire);
+            double r = 1.0;
+            double dz = r * Math.Cos(t);
 
-            _latitude = new Vector3D(0, y, z);
+            //configuration de l'angle polaire
+            double polaire = Math.Acos(dz / r) * 180/Math.PI;
 
-            Trace.TraceInformation($" k: {k}, t: {t}, dz: {dz}");
+            _latitude = new Vector3D(polaire, -1, 0);
+
+            Trace.TraceInformation($"latitude: {_latitude}");
         }
 
         return _latitude;
@@ -119,6 +104,7 @@ public class Projection
     public Vector3D M()
     {
         _position = Vector3D.CrossProduct(_latitude, _longitude);
+
         return _position;
     }
 }

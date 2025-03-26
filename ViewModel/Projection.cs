@@ -9,10 +9,10 @@ namespace WPF_PROJ;
 /// </summary>
 public class Projection
 {
-    Point3D[] Xm = new Point3D[10];
-    Point3D[] Ym = new Point3D[10];
-    Point3D[] Zm = new Point3D[10];
-    Point3D[] Om = new Point3D[10];
+    double Xm;
+    double Ym;
+    double Zm;
+    double Om;
 
     private Vector3D _position;
     public Vector3D Position
@@ -46,26 +46,26 @@ public class Projection
     /// </summary>
     /// <param name="p1"> point de départ </param>
     /// <param name="p2"> point d'arriver </param>
-    public Vector3D Phi(Point3D[] p1, Point3D[] p2)
+    public Vector3D Phi(double p1, double p2)
     {
-        double t = 0;
-        
-       while(t <= 6.28)
-       {
-            t += 0.01;
+        while (p1 <= 6.28 && p2 <= 6.28)
+        {
+            p1 += 0.01;
+            p2 += 0.01;
 
-            //projection de l'angle sur l'axe x et y 
-            double r = 1.0;
-            double dx = r * Math.Cos(t);
-            double dy = r * Math.Sin(t);
+            //projection de l'angle 
+            double x = Math.Cos(p1) * Math.Sin(p2);
+            double y = Math.Sin(p1) * Math.Sin(p2);
+            double z = Math.Cos(p2);
 
-            //configuration de l'angle phi 
-            double azimuth = Math.Atan2(dx, dy) * 180 / Math.PI;
+            //configuration de l'angle
+            double r = Math.Sqrt((x * x + y * y + z * z));
+            double azimuth = Math.Acos(z / r) * 180 / Math.PI;
 
             _longitude = new Vector3D(0, -1, azimuth);
 
             Trace.TraceInformation($"longitude: {_longitude}");
-       }
+        }
 
         return _longitude;
     }
@@ -75,20 +75,19 @@ public class Projection
     /// </summary>
     /// <param name="p1"> point de départ </param>
     /// <param name="p2"> point d'arriver </param>
-    public Vector3D Theta(Point3D[] p1, Point3D[] p2)
+    public Vector3D Theta(double p1, double p2)
     {
-        double t = 0;
-
-        while (t <= 6.28)
+        while (p1 <= 3.14 && p2 <= 3.14)
         {
-            t += 0.1;
+            p1 += 0.01;
+            p2 += 0.01;
 
-            //projection de l'angle sur l'axe z et y 
-            double r = 1.0;
-            double dz = r * Math.Cos(t);
+            //projection de l'angle polaire
+            double z = Math.Cos(p1) * Math.Sin(p2);
+            double y = Math.Sin(p1) * Math.Sin(p2);
 
             //configuration de l'angle polaire
-            double polaire = Math.Acos(dz / r) * 180/Math.PI;
+            double polaire = Math.Atan2(z, y) * 180 / Math.PI;
 
             _latitude = new Vector3D(polaire, -1, 0);
 

@@ -13,6 +13,10 @@ public class Projection
     double Ym;
     double Zm;
     double Om;
+    
+    double polaire;
+    double azimuth;
+
 
     private Vector3D _position;
     public Vector3D Position
@@ -39,6 +43,8 @@ public class Projection
     {
         Longitude = Phi(Xm, Ym);
         Latitude = Theta(Zm, Om);
+        M();
+        
     }
 
     /// <summary>
@@ -60,7 +66,7 @@ public class Projection
 
             //configuration de l'angle
             double r = Math.Sqrt((x * x + y * y + z * z));
-            double azimuth = Math.Acos(z / r) * 180 / Math.PI;
+            azimuth = Math.Acos(z / r) * 180 / Math.PI;
 
             _longitude = new Vector3D(0, -1, azimuth);
 
@@ -87,7 +93,7 @@ public class Projection
             double y = Math.Sin(p1) * Math.Sin(p2);
 
             //configuration de l'angle polaire
-            double polaire = Math.Atan2(z, y) * 180 / Math.PI;
+            polaire = Math.Atan2(z, y) * 180 / Math.PI;
 
             _latitude = new Vector3D(polaire, -1, 0);
 
@@ -102,7 +108,9 @@ public class Projection
     /// </summary>
     public Vector3D M()
     {
-        _position = Vector3D.CrossProduct(_latitude, _longitude);
+        _position = Vector3D.CrossProduct( _latitude, _longitude );
+        
+        Trace.TraceInformation($"produit vectoriel: {_position}");
 
         return _position;
     }

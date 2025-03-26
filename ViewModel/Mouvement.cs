@@ -71,8 +71,6 @@ public class Mouvement : Projection, INotifyPropertyChanged
             Position = Vector3D.CrossProduct(Longitude,Latitude)
         };
 
-        Trace.TraceInformation($"poduit vectoriel: {Position}");
-
         OnPropertyChanged(nameof(Orbite));
     }
 

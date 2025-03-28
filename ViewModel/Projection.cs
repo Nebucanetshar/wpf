@@ -9,13 +9,13 @@ namespace WPF_PROJ;
 /// </summary>
 public class Projection
 {
-    double Xm;
-    double Ym;
-    double Zm;
-    double Om;
+    public double Xm;
+    public double Ym;
+    public double Zm;
+    public double Om;
     
-    double polaire;
-    double azimuth;
+    private double polaire;
+    private double azimuth;
 
     public readonly List<Vector3D> theta = [];
     public readonly List<Vector3D> phi = [];
@@ -47,9 +47,8 @@ public class Projection
         Longitude = Phi(Xm, Ym);
         Latitude = Theta(Zm, Om);
         M();
-        
     }
-
+    
     /// <summary>
     /// vecteur directionnel autour de l'axe z (horizontal de la scène)
     /// </summary>
@@ -62,7 +61,7 @@ public class Projection
             p1 += 0.01;
             p2 += 0.01;
 
-            //projection de l'angle 
+            //calcul de projection
             double x = Math.Cos(p1) * Math.Sin(p2);
             double y = Math.Sin(p1) * Math.Sin(p2);
             double z = Math.Cos(p2);
@@ -73,10 +72,8 @@ public class Projection
 
            _longitude = new Vector3D(0, -1, azimuth);
 
-            //stocke le vecteur dans un tableau
+            //stocke les valeurs de la longitude
             phi.Add(_longitude);
-
-            //Trace.TraceInformation($"longitude: {_longitude}");
         }
 
         return _longitude;
@@ -94,7 +91,7 @@ public class Projection
             p1 += 0.01;
             p2 += 0.01;
 
-            //projection de l'angle polaire
+            //calcul de projection
             double z = Math.Cos(p1) * Math.Sin(p2);
             double y = Math.Sin(p1) * Math.Sin(p2);
 
@@ -103,17 +100,15 @@ public class Projection
 
             _latitude = new Vector3D(polaire, -1, 0);
 
-            //stocke le vecteur dans un tableau 
+            //stocke les valeurs de la latitude
             theta.Add(_latitude);
-
-            //Trace.TraceInformation($"latitude: {_latitude}");
         }
 
         return _latitude ;
     }
 
     /// <summary>
-    /// la position illustre le produit vectoriel de U^V = Wu * Wv
+    /// le déplacement de la position est illustré par le produit vectoriel itéré 
     /// </summary>
     public Vector3D M()
     {

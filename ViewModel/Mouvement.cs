@@ -9,6 +9,8 @@ using System.Windows.Media;
 using System.Windows.Media.Media3D;
 using GalaSoft.MvvmLight.Command;
 using System.Collections.Specialized;
+using WPF3D_MVVM;
+
 
 namespace WPF_MOVE;
 
@@ -62,12 +64,19 @@ public class Mouvement : Projection, INotifyPropertyChanged
     }
 
     /// <summary>
-    /// motorise la projection créant une distance de déplacement sphérique (orbital) 
+    ///animation du mouvement orbital dans un espace sphérique avec MAJ camera pour chaque frame 
     /// </summary>
     private void OnRendering(object sender, EventArgs e)
     {
-        //[...]
+        //calcul du déplacement 
+        Vector3D move = Orbite.M();
 
+        //MAJ position de la camera pour chaque frame du produit vectoriel 
+        Orbite.Position = new Vector3D(move.X ,move.Y, move.Z);
+       
+        Trace.TraceInformation($"MAJ Camera: {Orbite.Position}");
+
+        //Trigger l'event MAJ de la camera 
         OnPropertyChanged(nameof(Orbite));
     }
 

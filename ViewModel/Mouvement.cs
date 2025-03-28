@@ -66,7 +66,8 @@ public class Mouvement : Projection, INotifyPropertyChanged
     /// </summary>
     private void OnRendering(object sender, EventArgs e)
     {
-       //
+        //[...]
+
         OnPropertyChanged(nameof(Orbite));
     }
 

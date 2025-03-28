@@ -25,15 +25,15 @@ public class Projection
         set => _position = value;
     }
 
-    private Vector3D _longitude;
-    public Vector3D Longitude
+    private List<Vector3D> _longitude;
+    public List<Vector3D> Longitude
     {
         get => _longitude;
         set => _longitude = value;
     }
 
-    private Vector3D _latitude;
-    public  Vector3D Latitude
+    private List<Vector3D> _latitude;
+    public  List<Vector3D> Latitude
     {
         get => _latitude;
         set => _latitude = value;
@@ -52,8 +52,10 @@ public class Projection
     /// </summary>
     /// <param name="p1"> point de départ </param>
     /// <param name="p2"> point d'arriver </param>
-    public Vector3D Phi(double p1, double p2)
+    public List<Vector3D> Phi(double p1, double p2)
     {
+        List<Vector3D> result = [];
+
         while (p1 <= 6.28 && p2 <= 6.28)
         {
             p1 += 0.01;
@@ -68,9 +70,11 @@ public class Projection
             double r = Math.Sqrt((x * x + y * y + z * z));
             azimuth = Math.Acos(z / r) * 180 / Math.PI;
 
-            _longitude = new Vector3D(0, -1, azimuth);
+            Vector3D longitude = new Vector3D(0, -1, azimuth);
 
-            Trace.TraceInformation($"longitude: {_longitude}");
+            _longitude = result.Add(longitude);
+
+            Trace.TraceInformation($"longitude: {longitude}");
         }
 
         return _longitude;
@@ -81,8 +85,10 @@ public class Projection
     /// </summary>
     /// <param name="p1"> point de départ </param>
     /// <param name="p2"> point d'arriver </param>
-    public Vector3D Theta(double p1, double p2)
+    public List<Vector3D> Theta(double p1, double p2)
     {
+        List<Vector3D> result = [];
+
         while (p1 <= 3.14 && p2 <= 3.14)
         {
             p1 += 0.01;
@@ -95,7 +101,10 @@ public class Projection
             //configuration de l'angle polaire
             polaire = Math.Atan2(z, y) * 180 / Math.PI;
 
-            _latitude = new Vector3D(polaire, -1, 0);
+             Vector3D latitude = new Vector3D(polaire, -1, 0);
+
+            //stocke le vecteur dans la liste
+            _latitude = result.Add(latitude);
 
             Trace.TraceInformation($"latitude: {_latitude}");
         }
@@ -108,9 +117,15 @@ public class Projection
     /// </summary>
     public Vector3D M()
     {
-        _position = Vector3D.CrossProduct( _latitude, _longitude );
-        
-        Trace.TraceInformation($"produit vectoriel: {_position}");
+        List<Vector3D> longitude = Phi(Xm, Ym);
+        List<Vector3D> latitude = Theta(Zm, Om);
+
+        for (int i = 0; i < Math.Min(longitude.Count, latitude.Count); i++)
+        {
+            _position = Vector3D.CrossProduct(longitude[i], latitude[i]);
+
+            Trace.TraceInformation($"position: {_position}");
+        }
 
         return _position;
     }

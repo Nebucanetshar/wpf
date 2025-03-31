@@ -66,17 +66,20 @@ public class Mouvement : Projection, INotifyPropertyChanged
     /// <summary>
     ///animation du mouvement orbital dans un espace sphérique avec MAJ camera pour chaque frame 
     /// </summary>
-    private void OnRendering(object sender, EventArgs e)
+    private void OnRendering(object? sender, EventArgs e)
     {
-        //calcul du déplacement 
-        Vector3D move = Orbite.M();
+        ////MAJ position de la camera pour chaque frame du produit vectoriel 
+        //Orbite.Position = Orbite.M();
 
-        //MAJ position de la camera pour chaque frame du produit vectoriel 
-        Orbite.Position = new Vector3D(move.X ,move.Y, move.Z);
-       
-        Trace.TraceInformation($"MAJ Camera: {Orbite.Position}");
+        //Trace.TraceInformation($"MAJ Camera: {Orbite.Position}");
 
-        //Trigger l'event MAJ de la camera 
+        ////Trigger l'event MAJ de la camera 
+        //OnPropertyChanged(nameof(Orbite));
+
+        Orbite.Position = Orbite.UpdatePosition();
+
+        Trace.TraceInformation($"Position : {Orbite.Position}");
+
         OnPropertyChanged(nameof(Orbite));
     }
 

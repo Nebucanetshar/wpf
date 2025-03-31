@@ -68,16 +68,19 @@ public class Mouvement : Projection, INotifyPropertyChanged
     /// </summary>
     private void OnRendering(object sender, EventArgs e)
     {
-        //calcul du déplacement 
-        Vector3D move = Orbite.M();
-
         //MAJ position de la camera pour chaque frame du produit vectoriel 
-        Orbite.Position = new Vector3D(move.X ,move.Y, move.Z);
-       
+        Orbite.Position = Orbite.M();
+
         Trace.TraceInformation($"MAJ Camera: {Orbite.Position}");
 
         //Trigger l'event MAJ de la camera 
         OnPropertyChanged(nameof(Orbite));
+
+        //Orbite.Position = Orbite.UpdatePosition();
+
+        //Trace.TraceInformation($"MAJ Camera : {Orbite.Position}");
+
+        //OnPropertyChanged(nameof(Orbite));
     }
 
     public void StartAnimation(bool type)

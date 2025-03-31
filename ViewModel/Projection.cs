@@ -13,14 +13,19 @@ public class Projection
     public double Ym;
     public double Zm;
     public double Om;
-    
+
     private double polaire;
     private double azimuth;
 
     public readonly List<Vector3D> theta = [];
     public readonly List<Vector3D> phi = [];
 
+    private double angleStep = 0.01;
+    private double a = 5.0;
+    private double b = 3.0;
+    private int frame = 0;
 
+   
     private Vector3D _position;
     public Vector3D Position
     {
@@ -36,7 +41,7 @@ public class Projection
     }
 
     private Vector3D _latitude;
-    public  Vector3D Latitude
+    public Vector3D Latitude
     {
         get => _latitude;
         set => _latitude = value;
@@ -48,12 +53,12 @@ public class Projection
         Latitude = Theta(Zm, Om);
         M();
     }
-    
+
     /// <summary>
     /// vecteur directionnel autour de l'axe z (horizontal de la scène)
     /// </summary>
-    /// <param name="p1"> point de départ </param>
-    /// <param name="p2"> point d'arriver </param>
+    /// <param name = "p1" > point de départ</param>
+    /// <param name = "p2" > point d'arriver </param>
     public Vector3D Phi(double p1, double p2)
     {
         while (p1 <= 6.28 && p2 <= 6.28)
@@ -70,7 +75,7 @@ public class Projection
             double r = Math.Sqrt((x * x + y * y + z * z));
             azimuth = Math.Acos(z / r) * 180 / Math.PI;
 
-           _longitude = new Vector3D(0, -1, azimuth);
+            _longitude = new Vector3D(0, -1, azimuth);
 
             //stocke les valeurs de la longitude
             phi.Add(_longitude);
@@ -82,8 +87,8 @@ public class Projection
     /// <summary>
     /// vecteur directionnel autour de l'axe x (vertical de la scène)
     /// </summary>
-    /// <param name="p1"> point de départ </param>
-    /// <param name="p2"> point d'arriver </param>
+    /// <param name = "p1" > point de départ</param>
+    /// <param name = "p2" > point d'arriver </param>
     public Vector3D Theta(double p1, double p2)
     {
         while (p1 <= 3.14 && p2 <= 3.14)
@@ -104,7 +109,7 @@ public class Projection
             theta.Add(_latitude);
         }
 
-        return _latitude ;
+        return _latitude;
     }
 
     /// <summary>
@@ -112,13 +117,52 @@ public class Projection
     /// </summary>
     public Vector3D M()
     {
-        for (int i =0; i < Math.Min(phi.Count, theta.Count); i++)
+        for (int i = 0; i < Math.Min(phi.Count, theta.Count); i++)
         {
             _position = Vector3D.CrossProduct(phi[i], theta[i]);
+
+            if (_position.Length > 1)
+            {
+                _position.Normalize();
+            }
 
             Trace.TraceInformation($"position: {_position}");
         }
 
         return _position;
     }
+
+    //private void GenerateOrbit()
+    //{
+    //    for (double t = 0; t < 2 * Math.PI; t += angleStep)
+    //    {
+    //        double x = a * Math.Cos(t);
+    //        double y = b * Math.Sin(t);
+    //        double z = 0; // Orbite dans le plan XY
+
+    //        _longitude = new Vector3D(x, y, z);
+    //        _longitude.Normalize();
+
+    //        _latitude = new Vector3D(-y, x, 0);
+    //        _latitude.Normalize();
+
+    //        phi.Add(_longitude);
+    //        theta.Add(_latitude);
+    //    }
+    //}
+
+    //public Vector3D UpdatePosition()
+    //{
+    //    if (phi.Count == 0 || theta.Count == 0) return new Vector3D();
+
+    //    //selection de la position courante 
+    //    int index = frame % phi.Count;
+    //    Vector3D newPosition = Vector3D.CrossProduct(phi[index], theta[index]);
+
+    //    newPosition.Normalize();
+
+    //    frame++;
+
+    //    return newPosition;
+    //}
 }

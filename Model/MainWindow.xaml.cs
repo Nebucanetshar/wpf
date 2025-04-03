@@ -19,7 +19,10 @@ using WPF_CONTROL;
 namespace WPF3D_MVVM;
 
 /// <summary>
-/// Interaction logic for MainWindow.xaml
+/// Interaction logic for MainWindow.xaml,Si Data="{Binding}" est défini trop tôt, 
+/// WPF pourrait ne pas encore avoir attribué DataContext = new Mouvement();, donc proxy.Data reste null
+/// Le Dispatcher.Invoke(..., DispatcherPriority.Loaded) permet de s'assurer que le binding 
+/// est bien établi avant d'accéder à proxy.Data.
 /// </summary>
 public partial class MainWindow : Window
 {
@@ -31,7 +34,8 @@ public partial class MainWindow : Window
 
         // permet la conversion de ma projection avec celui d'Helix.ProjectionCamera 
         var proxy = (BindingProxy)FindResource("proxy");
-        if(proxy?.Data is Mouvement convert)
+
+        if (proxy?.Data is Mouvement convert)
         {
             Helix.Camera = ProjectionConverter.ConvertToCamera(convert.Orbite);
         }

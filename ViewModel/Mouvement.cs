@@ -7,9 +7,11 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
+using System.Runtime.CompilerServices;
 using GalaSoft.MvvmLight.Command;
 using System.Collections.Specialized;
 using WPF3D_MVVM;
+using System.Windows.Media.Animation;
 
 
 namespace WPF_MOVE;
@@ -80,7 +82,7 @@ public class Mouvement : Projection, INotifyPropertyChanged
 
         Trace.TraceInformation($"Position : {Orbite.Position}");
 
-        OnPropertyChanged(nameof(Orbite));
+        OnPropertyChanged(nameof(Orbite));// est ce que le changement de property et configuré pour l'animation ?  
     }
 
     public void StartAnimation(bool type)
@@ -94,8 +96,8 @@ public class Mouvement : Projection, INotifyPropertyChanged
         Trace.TraceInformation($"commandParameter EventArgs: {type}");
     }
 
-    public event PropertyChangedEventHandler? PropertyChanged;
-    public void OnPropertyChanged(string propertyName)
+    public event PropertyChangedEventHandler? PropertyChanged; 
+    protected void OnPropertyChanged(string propertyName)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }

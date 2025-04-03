@@ -157,7 +157,7 @@ public class Projection
             double dy = b * Math.Cos(anglePhi) * Math.Cos(angleTheta);
             double dz = Math.Cos(angleTheta);
 
-            Vector3D vitesse = new Vector3D(dx, dy, dz);
+            Vector3D vitesse = new(dx, dy, dz);
             vitesse.Normalize();
 
             phi.Add(_position);
@@ -169,9 +169,9 @@ public class Projection
     {
         if (phi.Count == 0 || theta.Count == 0) return new Vector3D(0, 0, 0);
 
-        //selection de la position courante 
+        //selection de la position courante évite un recalcul de toute la liste 
         int index = frame % phi.Count;
-        
+
         var Newposition = phi[index];
         //Vector3D newPosition = Vector3D.CrossProduct(phi[index], theta[index]);
 

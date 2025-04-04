@@ -14,7 +14,7 @@ public class BindingProxy : Freezable
     public static readonly DependencyProperty DataProperty =
         DependencyProperty.Register(
             nameof(Data),
-            typeof(Projection), //animation de ma projection pour la propriété Orbite
+            typeof(Projection), //animation de ma projection pour la propriété Orbite dans le fichier Mouvement.cs
             typeof(BindingProxy),
             new UIPropertyMetadata(null));
 

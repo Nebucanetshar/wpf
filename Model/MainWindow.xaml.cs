@@ -6,23 +6,21 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
+using System.Windows.Media.Media3D;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using HelixToolkit.Wpf;
 using WPF_PROJ;
 using WPF_CONTROL;
+using Camera;
 
 
 
 namespace WPF3D_MVVM;
 
 /// <summary>
-/// Interaction logic for MainWindow.xaml,Si Data="{Binding}" est défini trop tôt, 
-/// WPF pourrait ne pas encore avoir attribué DataContext = new Mouvement();, donc proxy.Data reste null
-/// Le Dispatcher.Invoke(..., DispatcherPriority.Loaded) permet de s'assurer que le binding 
-/// est bien établi avant d'accéder à proxy.Data.
+/// Interaction logic for MainWindow.xaml
 /// </summary>
 public partial class MainWindow : Window
 {
@@ -38,6 +36,14 @@ public partial class MainWindow : Window
         if (proxy?.Data is Mouvement convert)
         {
             Helix.Camera = ProjectionConverter.ConvertToCamera(convert.Orbite);
+
+            Helix.CameraRotationMode = CameraRotationMode.Trackball;
+
+            Helix.Camera.AnimateTo(
+                new Point3D(convert.Position.X, convert.Position.Y, convert.Position.Z),
+                new Vector3D(0, -1, 0),
+                new Vector3D(0, 0, 1),
+                1000);
         }
     }
 

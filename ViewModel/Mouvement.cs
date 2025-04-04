@@ -82,7 +82,7 @@ public class Mouvement : Projection, INotifyPropertyChanged
 
         Trace.TraceInformation($"Position : {Orbite.Position}");
 
-        OnPropertyChanged(nameof(Orbite));// est ce que le changement de property et configuré pour l'animation ?  
+        OnPropertyChanged(nameof(Orbite));// est ce que le changement de property et configuré pour l'animation ? oui
     }
 
     public void StartAnimation(bool type)

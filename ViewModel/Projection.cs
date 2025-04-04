@@ -5,7 +5,7 @@ using System.Windows.Media.Media3D;
 namespace WPF_PROJ;
 
 /// <summary>
-/// il faut incrémenté les points de -1 à 1 
+/// calcul de projection pour définir une animation d'un mouvement 
 /// </summary>
 public class Projection
 {

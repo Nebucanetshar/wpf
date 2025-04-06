@@ -1,21 +1,9 @@
-using Sphère_MVVM;
 using WPF_MOVE;
 using WPF_PROXY;
-using System.Text;
-using System.Windows;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media.Media3D;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using HelixToolkit.Wpf;
 using WPF_PROJ;
-using WPF_CONTROL;
-using Camera;
-
-
+using System.Windows;
+using System.Windows.Media.Media3D;
+using HelixToolkit.Wpf;
 
 namespace WPF3D_MVVM;
 
@@ -33,17 +21,18 @@ public partial class MainWindow : Window
         // permet la conversion de ma projection avec celui d'Helix.ProjectionCamera 
         var proxy = (BindingProxy)FindResource("proxy");
 
-        if (proxy?.Data is Mouvement convert)
+        if (proxy?.Data is Mouvement ur)
         {
-            Helix.Camera = ProjectionConverter.ConvertToCamera(convert.Orbite);
+            //Helix.Camera = ProjectionConverter.ConvertToCamera(ur.Orbite);
 
+            //rotation libre (par défault)
             Helix.CameraRotationMode = CameraRotationMode.Trackball;
-
+ 
             Helix.Camera.AnimateTo(
-                new Point3D(convert.Position.X, convert.Position.Y, convert.Position.Z),
+                new Point3D(ur.Orbite.Position.X, ur.Orbite.Position.Y, ur.Orbite.Position.Z),
                 new Vector3D(0, -1, 0),
                 new Vector3D(0, 0, 1),
-                1000);
+                150);
         }
     }
 

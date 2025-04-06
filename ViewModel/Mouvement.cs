@@ -1,23 +1,26 @@
-﻿using HelixToolkit.Wpf;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using WPF_PROJ;
 using System.Diagnostics;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
-using System.Runtime.CompilerServices;
-using GalaSoft.MvvmLight.Command;
-using System.Collections.Specialized;
-using WPF3D_MVVM;
-using System.Windows.Media.Animation;
+using System.Windows.Controls;
+using System.Net;
+
 
 
 namespace WPF_MOVE;
 
 public class Mouvement : Projection, INotifyPropertyChanged
 {
+    private int frame = 0;
+
+    private Vector3D _position;
+    public Vector3D Position
+    {
+        get => _position;
+        set => _position = value;
+    }
+
     private Projection _orbite;
     public Projection Orbite
     {
@@ -25,7 +28,7 @@ public class Mouvement : Projection, INotifyPropertyChanged
         set
         {
             _orbite = value;
-            OnPropertyChanged(nameof(Orbite));
+            OnPropertyChanged(nameof(Orbite.Position));
         }
     }
 
@@ -54,35 +57,37 @@ public class Mouvement : Projection, INotifyPropertyChanged
             OnPropertyChanged(nameof(Animate));
         }
     }
-
-    public Mouvement()
+    /// <summary>
+    /// La classe Mouvement appelle le constructeur Projection en base 
+    /// </summary>
+    public Mouvement(): base() 
     {
-        Orbite = new Projection
+        Orbite = new Projection()
         {
-            Position = new Vector3D(0, 1, 0),
+            Position = new Vector3D(Xm, Ym, Zm),
             Longitude = new Vector3D(0, -1, 0),
-            Latitude = new Vector3D(0, -1, 0)
+            Latitude = new Vector3D(0, 0, 1),
         };
     }
 
-    /// <summary>
-    ///animation du mouvement orbital dans un espace sphérique avec MAJ camera pour chaque frame 
-    /// </summary>
+    ///<summary>
+    ///le déplacement de la position est illustré par le produit vectoriel itéré créant l'animation du mouvement orbital 
+    ///dans un espace sphérique avec MAJ camera pour chaque frame
+    ///</summary>
     private void OnRendering(object? sender, EventArgs e)
     {
-        ////MAJ position de la camera pour chaque frame du produit vectoriel 
-        //Orbite.Position = Orbite.M();
+        int i = frame % Math.Min(phi.Count, theta.Count);
 
-        //Trace.TraceInformation($"MAJ Camera: {Orbite.Position}");
+        _position = Vector3D.CrossProduct(phi[i], theta[i]);
 
-        ////Trigger l'event MAJ de la camera 
-        //OnPropertyChanged(nameof(Orbite));
+        if (_position.Length > 1)
+        {
+            _position.Normalize();
+        }
 
-        Orbite.Position = Orbite.UpdatePosition();
+        Trace.TraceInformation($"position: {_position}");
 
-        Trace.TraceInformation($"Position : {Orbite.Position}");
-
-        OnPropertyChanged(nameof(Orbite));// est ce que le changement de property et configuré pour l'animation ? oui
+        frame++;
     }
 
     public void StartAnimation(bool type)

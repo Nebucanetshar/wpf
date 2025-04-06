@@ -1,8 +1,5 @@
-﻿using HelixToolkit.Wpf;
-using System.Windows;
-using System.Windows.Media.Media3D;
+﻿using System.Windows;
 using WPF_MOVE;
-using WPF_PROJ;
 
 namespace WPF_PROXY;
 
@@ -14,15 +11,15 @@ public class BindingProxy : Freezable
     public static readonly DependencyProperty DataProperty =
         DependencyProperty.Register(
             nameof(Data),
-            typeof(Projection), //animation de ma projection pour la propriété Orbite dans le fichier Mouvement.cs
+            typeof(Mouvement), //animation de ma projection pour la propriété Orbite dans le fichier Mouvement.cs
             typeof(BindingProxy),
             new UIPropertyMetadata(null));
 
-    protected override Freezable CreateInstanceCore() => new BindingProxy();
+    protected override Freezable CreateInstanceCore() => new BindingProxy(); //retourne new Binding Proxy
 
-    public Projection Data 
+    public Mouvement Data 
     {
-        get => (Projection)GetValue(DataProperty);
+        get => (Mouvement)GetValue(DataProperty);
         set => SetValue(DataProperty, value); 
     }
 }

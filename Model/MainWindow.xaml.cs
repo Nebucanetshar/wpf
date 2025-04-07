@@ -23,15 +23,13 @@ public partial class MainWindow : Window
 
         if (proxy?.Data is Mouvement ur)
         {
-            //Helix.Camera = ProjectionConverter.ConvertToCamera(ur.Orbite);
-
             //rotation libre (par défault)
             Helix.CameraRotationMode = CameraRotationMode.Trackball;
- 
+
             Helix.Camera.AnimateTo(
                 new Point3D(ur.Orbite.Position.X, ur.Orbite.Position.Y, ur.Orbite.Position.Z),
-                new Vector3D(0, -1, 0),
-                new Vector3D(0, 0, 1),
+                new Vector3D(ur.Orbite.Longitude.X, ur.Orbite.Longitude.Y, ur.Orbite.Longitude.Z),
+                new Vector3D(ur.Orbite.Latitude.X, ur.Orbite.Latitude.Y,ur.Orbite.Latitude.Z),
                 150);
         }
     }

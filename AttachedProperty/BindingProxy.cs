@@ -19,7 +19,15 @@ public class BindingProxy : Freezable
 
     public Mouvement Data 
     {
-        get => (Mouvement)GetValue(DataProperty);
+        get
+        {
+            var projection = (Mouvement)GetValue(DataProperty);
+
+            //projection.OnRendering();
+
+            return projection;
+        }
+
         set => SetValue(DataProperty, value); 
     }
 }

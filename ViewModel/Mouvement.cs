@@ -14,13 +14,6 @@ public class Mouvement : Projection, INotifyPropertyChanged
 {
     private int frame = 0;
 
-    private Vector3D _position;
-    public Vector3D Position
-    {
-        get => _position;
-        set => _position = value;
-    }
-
     private Projection _orbite;
     public Projection Orbite
     {
@@ -35,7 +28,7 @@ public class Mouvement : Projection, INotifyPropertyChanged
     /// <summary>
     /// conversion de la cible en point 
     /// </summary>
-    public Point3D Point => new Point3D(Target.X, Target.Y, Target.Z);
+    public Point3D Point => new(Target.X, Target.Y, Target.Z);
     private Vector3D _target;
     public Vector3D Target
     {
@@ -64,9 +57,9 @@ public class Mouvement : Projection, INotifyPropertyChanged
     {
         Orbite = new Projection()
         {
-            Position = new Vector3D(Xm, Ym, Zm),
-            Longitude = new Vector3D(0, -1, 0),
-            Latitude = new Vector3D(0, 0, 1),
+            Position = new Vector3D(Xm, 1, Zm),
+            Longitude = Phi(Xm, Ym),
+            Latitude = Theta(Zm, Om),
         };
     }
 
@@ -74,20 +67,17 @@ public class Mouvement : Projection, INotifyPropertyChanged
     ///le déplacement de la position est illustré par le produit vectoriel itéré créant l'animation du mouvement orbital 
     ///dans un espace sphérique avec MAJ camera pour chaque frame
     ///</summary>
-    private void OnRendering(object? sender, EventArgs e)
+    private void OnRendering(object? sender, EventArgs e) // utilisation d'une autre propriété animable ? 
     {
         int i = frame % Math.Min(phi.Count, theta.Count);
 
         _position = Vector3D.CrossProduct(phi[i], theta[i]);
 
-        if (_position.Length > 1)
-        {
-            _position.Normalize();
-        }
-
-        Trace.TraceInformation($"position: {_position}");
-
         frame++;
+
+        Trace.TraceInformation($"frame: {frame}, position: {_position}");
+
+        OnPropertyChanged(nameof(Orbite));
     }
 
     public void StartAnimation(bool type)

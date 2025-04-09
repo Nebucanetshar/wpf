@@ -16,23 +16,37 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         
-        DataContext = new Mouvement();
+        DataContext = new Mouvement(); //perd la mise à jour du constructeur Mouvement pour chaque instance 
 
         // permet la conversion de ma projection avec celui d'Helix.ProjectionCamera 
         var proxy = (BindingProxy)FindResource("proxy");
 
-        if (proxy?.Data is Mouvement ur)
+        if (proxy?.Data is Mouvement du)
         {
-            //rotation libre (par défault)
-            Helix.CameraRotationMode = CameraRotationMode.Trackball;
+            Helix.Camera = ConvertToCamera(du.Orbite);
 
             Helix.Camera.AnimateTo(
-                new Point3D(ur.Orbite.Position.X, ur.Orbite.Position.Y, ur.Orbite.Position.Z),
-                new Vector3D(ur.Orbite.Longitude.X, ur.Orbite.Longitude.Y, ur.Orbite.Longitude.Z),
-                new Vector3D(ur.Orbite.Latitude.X, ur.Orbite.Latitude.Y,ur.Orbite.Latitude.Z),
+                new Point3D(du.Orbite.Position.X, 1, du.Orbite.Position.Z),
+                new Vector3D(0, -1, 0),
+                new Vector3D(0, 0, 1),
                 150);
         }
     }
+
+    public static ProjectionCamera ConvertToCamera(Projection u)
+    {
+        var camera = new PerspectiveCamera
+        {
+            Position = new Point3D(0, 1, 0),
+            LookDirection = new Vector3D(0, -1, u.Longitude.Z),
+            UpDirection = new Vector3D(u.Latitude.X, 0, 1),
+            FieldOfView = 150,
+        };
+
+        return camera;
+    }
+
+
 
     /// <summary>
     /// Routage vers <i:Interaction.Triggers>

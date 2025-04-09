@@ -35,7 +35,7 @@ public class Mouvement : Projection, INotifyPropertyChanged
         get => _target;
         set
         {
-            Orbite.Longitude = _target - Orbite.Position;
+             _target = Orbite.Longitude;
             OnPropertyChanged(nameof(Point));
         }
     }
@@ -58,20 +58,24 @@ public class Mouvement : Projection, INotifyPropertyChanged
         Orbite = new Projection()
         {
             Position = new Vector3D(Xm, 1, Zm),
-            Longitude = Phi(Xm, Ym),
-            Latitude = Theta(Zm, Om),
         };
+
     }
 
     ///<summary>
     ///le déplacement de la position est illustré par le produit vectoriel itéré créant l'animation du mouvement orbital 
     ///dans un espace sphérique avec MAJ camera pour chaque frame
     ///</summary>
-    private void OnRendering(object? sender, EventArgs e) // utilisation d'une autre propriété animable ? 
+    public void OnRendering(object? sender, EventArgs e) // utilisation d'une autre propriété animable ? 
     {
         int i = frame % Math.Min(phi.Count, theta.Count);
 
         _position = Vector3D.CrossProduct(phi[i], theta[i]);
+
+        if (_position.Length > 0)
+        {
+            _position.Normalize();
+        }
 
         frame++;
 

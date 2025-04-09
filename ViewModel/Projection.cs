@@ -10,10 +10,13 @@ namespace WPF_PROJ;
 /// </summary>
 public class Projection
 {
-    public double Xm = 0;
-    public double Ym = 0;
-    public double Zm = 0;
-    public double Om = 0;
+    /// <summary>
+    /// il faut get; set; c'est valeurs, dans l'instance du mouvement elle reste toujours à 0
+    /// </summary>
+    public double Xm { get; set; } = 0;
+    public double Ym { get; set; } = 0;
+    public double Zm { get; set; } = 0;
+    public double Om { get; set; } = 0;
 
     public double polaire;
     public double azimuth;
@@ -72,11 +75,17 @@ public class Projection
 
             _longitude = new Vector3D(0, -1, azimuth);
 
+            if (_longitude.Length > 0)
+            {
+                _longitude.Normalize();
+            }
+
             //stocke les valeurs de la longitude
             phi.Add(_longitude);
 
-        }
+            //Trace.TraceInformation($"longitude: {Longitude}, p1:{p1}, p2:{p2}");
 
+        }
         return _longitude;
     }
 
@@ -101,9 +110,15 @@ public class Projection
 
             _latitude = new Vector3D(polaire, -1, 0);
 
+            if (_latitude.Length > 0)
+            {
+                _latitude.Normalize();
+            }
+
             //stocke les valeurs de la latitude
             theta.Add(_latitude);
 
+            //Trace.TraceInformation($"latitude: {Latitude}, p1:{p1}, p2:{p2}");
         }
 
         return _latitude;

@@ -15,18 +15,11 @@ public class BindingProxy : Freezable
             typeof(BindingProxy),
             new UIPropertyMetadata(null));
 
-    protected override Freezable CreateInstanceCore() => new BindingProxy(); //retourne new Binding Proxy
+    protected override Freezable CreateInstanceCore() => new BindingProxy(); 
 
     public Mouvement Data 
     {
-        get
-        {
-            var projection = (Mouvement)GetValue(DataProperty);
-
-            //projection.OnRendering();
-
-            return projection;
-        }
+        get => (Mouvement)GetValue(DataProperty);
 
         set => SetValue(DataProperty, value); 
     }

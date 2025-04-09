@@ -2,6 +2,8 @@
 using System.Windows;
 using System.Windows.Media.Media3D;
 using Microsoft.Xaml.Behaviors;
+using System.Diagnostics;
+using WPF_MOVE;
 
 
 namespace WPF_PROXY;
@@ -16,29 +18,41 @@ public class BindingBehavior : Behavior<HelixViewport3D>
             nameof(Camera),
             typeof(ProjectionCamera),
             typeof(BindingBehavior),
-            new PropertyMetadata(null, OnCameraChanged));
-
+            new PropertyMetadata(OnCameraChanged));
+    
+    public readonly DependencyPropertyChangedEventArgs e;
+    
     public ProjectionCamera Camera
     {
-        get => (ProjectionCamera)GetValue(CameraProperty);
+        get => (ProjectionCamera)GetValue(CameraProperty);//get la valeur de UIPropertyMetadata proxy ??
+
         set => SetValue(CameraProperty, value);
     }
 
-    private static void OnCameraChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    public void Association(DependencyPropertyChangedEventArgs e)
     {
-        if (d is BindingBehavior behavior && behavior.AssociatedObject != null)
+        var newCam = e.NewValue as ProjectionCamera;
+
+        AssociatedObject.Camera.Position = newCam.Position;
+        AssociatedObject.Camera.LookDirection = newCam.LookDirection;
+        AssociatedObject.Camera.UpDirection = newCam.UpDirection;
+    }
+
+    private static void OnCameraChanged(DependencyObject d,DependencyPropertyChangedEventArgs e)
+    {
+        if (d is BindingBehavior behavior)
         {
-            behavior.AssociatedObject.Camera = e.NewValue as ProjectionCamera;
+            behavior.Association(e);
         }
     }
 
     protected override void OnAttached()
     {
         base.OnAttached();
+        
         if (Camera != null)
         {
-            AssociatedObject.Camera = Camera;
+            Association(e);
         }
-
     }
 }

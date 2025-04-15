@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Media.Media3D;
 using Microsoft.Xaml.Behaviors;
 using System.Diagnostics;
-using WPF_MOVE;
+using WPF_PROJ;
 
 
 namespace WPF_PROXY;
@@ -18,7 +18,7 @@ public class BindingBehavior : Behavior<HelixViewport3D>
             nameof(Camera),
             typeof(ProjectionCamera),
             typeof(BindingBehavior),
-            new PropertyMetadata(OnCameraChanged));
+            new PropertyMetadata(new PerspectiveCamera(),OnCameraChanged));
     
     public readonly DependencyPropertyChangedEventArgs e;
     

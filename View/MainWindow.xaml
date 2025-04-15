@@ -6,19 +6,18 @@
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:p="clr-namespace:WPF_PROXY"
         xmlns:m="clr-namespace:WPF_MOVE"
-        
+        xmlns:c="clr-namespace:WPF_CONTROL"
         
         Title="MainWindow" Height="450" Width="800">
-
-    <Window.Resources>
-        <p:BindingProxy x:Key="proxy" Data="{Binding}"/>
-    </Window.Resources>
 
     <Window.DataContext>
         <m:Mouvement/>
     </Window.DataContext>
     
-   
+    <Window.Resources>
+        <p:BindingProxy x:Key="proxy" Data="{Binding}"/>
+    </Window.Resources>
+
         <Grid>
         <h:HelixViewport3D x:Name="Helix">
 
@@ -31,25 +30,11 @@
             <h:SphereVisual3D Center="{Binding Point}"  Radius="0.5"/>
 
             <i:Interaction.Triggers>
-                <i:EventTrigger EventName="PreviewMouseDown">
-                    <i:InvokeCommandAction Command="{Binding ClicDownLeft}" 
-                                           CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window},Path=(p:MouseHelper.MousePosition)}"/>
-                </i:EventTrigger>
-                <i:EventTrigger EventName="MouseMove">
-                    <i:InvokeCommandAction Command="{Binding OrbitalMove}"
-                                           CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window},Path=(p:MouseHelper.MousePosition)}"/>
-                </i:EventTrigger>
-                <i:EventTrigger EventName="LeftButtonUp">
-                    <i:InvokeCommandAction Command="{Binding ClicUpLeft}"
-                                           CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window},Path=(p:MouseHelper.MousePosition)}"/>
+                <i:EventTrigger EventName="MouseDown">
+                    <i:InvokeCommandAction Command="{Binding Source={x:Static c:Control.Instance}, Path=Marche}" 
+                                           CommandParameter="{Binding Animate}"/>
                 </i:EventTrigger>
             </i:Interaction.Triggers>
-
-            
-
-
-            
-            
             
         </h:HelixViewport3D>
     </Grid>

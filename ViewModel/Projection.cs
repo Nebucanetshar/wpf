@@ -1,77 +1,111 @@
 ﻿using System.Diagnostics;
+using System.Security.Cryptography.X509Certificates;
+using System.Windows.Controls;
 using System.Windows.Media.Media3D;
 
 namespace WPF_PROJ;
 
 /// <summary>
-/// 
+/// calcul de projection pour définir une animation d'un mouvement 
 /// </summary>
-public class Projection 
+public class Projection
 {
-    public Point3D Zm;
-    public Point3D Om;
-    public Point3D Xm;
-    public Point3D Ym;
+    public double Xm = 0;
+    public double Ym = 0;
+    public double Zm = 0;
+    public double Om = 0;
 
-    private Vector3D _position;
+    public double polaire;
+    public double azimuth;
+
+
+    public readonly List<Vector3D> theta = [];
+    public readonly List<Vector3D> phi = [];
+
+    public Vector3D _position;
     public Vector3D Position
     {
         get => _position;
         set => _position = value;
     }
 
-    private Vector3D _longitude;
+    public Vector3D _longitude;
     public Vector3D Longitude
     {
         get => _longitude;
         set => _longitude = value;
     }
 
-    private Vector3D _latitude;
+    public Vector3D _latitude;
     public Vector3D Latitude
     {
         get => _latitude;
         set => _latitude = value;
     }
 
-    public Projection() { }
-   
-    /// <summary>
-    /// vecteur directionnel de p1 vers p2 autour de z (horizontal de la scène)
-    /// </summary>
-    /// <param name="p1"></param>
-    /// <param name="p2"></param>
-    public Vector3D Phi(Point3D p1, Point3D p2)
+    public Projection()
     {
-       double dx = p2.X - p1.X;
-       double dy = p2.Y - p1.Y;
-
-       double azimuth = Math.Atan2(dx, dy);
-        
-        return _longitude = new Vector3D(0, 0, azimuth);
+        Longitude = Phi(Xm, Ym);
+        Latitude = Theta(Zm, Om);
     }
 
     /// <summary>
-    /// vecteur directionnel de p2 vers p4 autour de x (vertical de la scène)
+    /// vecteur directionnel autour de l'axe z (horizontal de la scène)
     /// </summary>
-    /// <param name="p3"></param>
-    /// <param name="p4"></param>
-    public Vector3D Theta(Point3D p3, Point3D p4)
+    /// <param name = "p1" > point de départ</param>
+    /// <param name = "p2" > point d'arriver </param>
+    public Vector3D Phi(double p1, double p2)
     {
-       double z = p4.Z - p3.Z;
-       double r = p4.Y - p3.Y;
-        
-       double polaire = Math.Acos(z/r);
-        
-        return _latitude = new Vector3D(polaire, 0, 0);
+        while (p1 <= 6.28 && p2 <= 6.28)
+        {
+            p1 += 0.01;
+            p2 += 0.01;
+
+            //calcul de projection
+            double x = Math.Cos(p1) * Math.Sin(p2);
+            double y = Math.Sin(p1) * Math.Sin(p2);
+            double z = Math.Cos(p2);
+
+            //configuration de l'angle
+            double r = Math.Sqrt((x * x + y * y + z * z));
+            azimuth = Math.Acos(z / r) * 180 / Math.PI;
+
+            _longitude = new Vector3D(0, -1, azimuth);
+
+            //stocke les valeurs de la longitude
+            phi.Add(_longitude);
+
+        }
+
+        return _longitude;
     }
 
     /// <summary>
-    /// la position correspond au produit vectoriel de Theta et Phi
+    /// vecteur directionnel autour de l'axe x (vertical de la scène)
     /// </summary>
-   public Vector3D M()
+    /// <param name = "p1" > point de départ</param>
+    /// <param name = "p2" > point d'arriver </param>
+    public Vector3D Theta(double p1, double p2)
     {
-        _position = Vector3D.CrossProduct(_latitude, _longitude);
-        return _position;
+        while (p1 <= 3.14 && p2 <= 3.14)
+        {
+            p1 += 0.01;
+            p2 += 0.01;
+
+            //calcul de projection
+            double z = Math.Cos(p1) * Math.Sin(p2);
+            double y = Math.Sin(p1) * Math.Sin(p2);
+
+            //configuration de l'angle polaire
+            polaire = Math.Atan2(z, y) * 180 / Math.PI;
+
+            _latitude = new Vector3D(polaire, -1, 0);
+
+            //stocke les valeurs de la latitude
+            theta.Add(_latitude);
+
+        }
+
+        return _latitude;
     }
 }

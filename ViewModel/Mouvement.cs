@@ -1,76 +1,101 @@
-﻿using HelixToolkit.Wpf;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using WPF_PROJ;
 using System.Diagnostics;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
-using GalaSoft.MvvmLight.Command;
-using System.Collections.Specialized;
+using System.Windows.Controls;
+using System.Net;
+
+
 
 namespace WPF_MOVE;
 
 public class Mouvement : Projection, INotifyPropertyChanged
 {
+    private int frame = 0;
+
     private Projection _orbite;
-    
     public Projection Orbite
     {
         get => _orbite;
         set
         {
             _orbite = value;
-            OnPropertyChanged(nameof(Orbite));
+            OnPropertyChanged(nameof(Orbite.Position));
         }
     }
 
     /// <summary>
     /// conversion de la cible en point 
     /// </summary>
-    public Point3D Point => new Point3D(Target.X, Target.Y, Target.Z);
+    public Point3D Point => new(Target.X, Target.Y, Target.Z);
     private Vector3D _target;
     public Vector3D Target
     {
         get => _target;
         set
         {
-            _target = value;
-            Orbite.Longitude = _target - Orbite.Position;
-            
-            OnPropertyChanged(nameof(Target));
+             _target = Orbite.Longitude;
             OnPropertyChanged(nameof(Point));
         }
     }
 
-    public Mouvement() { }
-
-    public Mouvement(double wu, double wv)
+    private bool _animate;
+    public bool Animate
     {
-        Orbite = new Projection
+        get => _animate;
+        set
         {
-            Position = new Vector3D(0, 1, 0),
-            Latitude = new Vector3D(0, -1, wv),
-            Longitude = new Vector3D(wu, -1, 0)
+            _animate = value;
+            OnPropertyChanged(nameof(Animate));
+        }
+    }
+    /// <summary>
+    /// La classe Mouvement appelle le constructeur Projection en base 
+    /// </summary>
+    public Mouvement(): base() 
+    {
+        Orbite = new Projection()
+        {
+            Position = new Vector3D(Xm, 1, Zm),
         };
     }
 
-    /// <summary>
-    /// animation du produit vectoriel selon la variation de phi et theta 
-    /// pour avoir une distance de deplacement sphérique (orbital) U^V = Wu * Wv
-    /// </summary>
-    /// <param name="p1"></param>
-    /// <param name="p2"></param>
-    /// <param name="p3"></param>
-    /// <param name="p4"></param>
-    public void OrbitalAnimation(Point3D Zm, Point3D Om, Point3D Xm, Point3D Ym)
+    ///<summary>
+    ///le déplacement de la position est illustré par le produit vectoriel itéré créant l'animation du mouvement orbital 
+    ///dans un espace sphérique avec MAJ camera pour chaque frame
+    ///</summary>
+    public void OnRendering(object? sender, EventArgs e) // utilisation d'une autre propriété animable ? 
     {
-       
+        int i = frame % Math.Min(phi.Count, theta.Count);
+
+        _position = Vector3D.CrossProduct(phi[i], theta[i]);
+
+        if (_position.Length > 0)
+        {
+            _position.Normalize();
+        }
+
+        frame++;
+
+        Trace.TraceInformation($"frame: {frame}, position: {_position}");
+
+        OnPropertyChanged(nameof(Orbite));
     }
 
-    public event PropertyChangedEventHandler? PropertyChanged;
-    public void OnPropertyChanged(string propertyName)
+    public void StartAnimation(bool type)
+    {
+        if (type == true)
+        {
+            CompositionTarget.Rendering += OnRendering;
+        }
+
+        _animate = type;
+        Trace.TraceInformation($"commandParameter EventArgs: {type}");
+    }
+
+    public event PropertyChangedEventHandler? PropertyChanged; 
+    protected void OnPropertyChanged(string propertyName)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }

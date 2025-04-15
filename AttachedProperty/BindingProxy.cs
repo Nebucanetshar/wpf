@@ -1,27 +1,26 @@
-﻿using HelixToolkit.Wpf;
-using System.Windows;
-using System.Windows.Media.Media3D;
-using WPF_PROJ;
+﻿using System.Windows;
+using WPF_MOVE;
 
 namespace WPF_PROXY;
 
 /// <summary>
-/// création d'une Attached Property car la propriété Camera de "http://helix-toolkit.org/wpf" effectue que des binding proxy
+/// création d'une Attached Property avec animation car la propriété Camera de "http://helix-toolkit.org/wpf" effectue que des BindingProxy
 /// </summary>
 public class BindingProxy : Freezable
 {
     public static readonly DependencyProperty DataProperty =
         DependencyProperty.Register(
             nameof(Data),
-            typeof(object),  
-            typeof(BindingProxy), 
+            typeof(Mouvement), //animation de ma projection pour la propriété Orbite dans le fichier Mouvement.cs
+            typeof(BindingProxy),
             new UIPropertyMetadata(null));
 
-    protected override Freezable CreateInstanceCore() => new BindingProxy();
+    protected override Freezable CreateInstanceCore() => new BindingProxy(); 
 
-    public object Data
+    public Mouvement Data 
     {
-        get => GetValue(DataProperty);
+        get => (Mouvement)GetValue(DataProperty);
+
         set => SetValue(DataProperty, value); 
     }
 }

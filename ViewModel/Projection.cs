@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Security.Cryptography.X509Certificates;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Media3D;
 
@@ -42,7 +43,7 @@ public class Projection
         get => _latitude;
         set => _latitude = value;
     }
-
+    
     public Projection()
     {
         Longitude = Phi(Xm, Ym);

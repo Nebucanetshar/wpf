@@ -5,6 +5,7 @@ using System.Windows.Media;
 using System.Windows.Media.Media3D;
 using System.Windows.Controls;
 using System.Net;
+using System.Windows;
 
 
 
@@ -21,7 +22,7 @@ public class Mouvement : Projection, INotifyPropertyChanged
         set
         {
             _orbite = value;
-            OnPropertyChanged(nameof(Orbite.Position));
+            OnPropertyChanged(nameof(Orbite));
         }
     }
 
@@ -55,7 +56,7 @@ public class Mouvement : Projection, INotifyPropertyChanged
     /// </summary>
     public Mouvement(): base() 
     {
-        Orbite = new Projection()
+        Orbite = new Projection() 
         {
             Position = new Vector3D(Xm, 1, Zm),
         };

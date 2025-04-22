@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "3LNYnnODpKA=",
+  "dgSpecHash": "fDJALTwODkg=",
   "success": true,
-  "projectFilePath": "C:\\Users\\user\\source\\VisualStudio\\c#\\test\\front\\wpf\\wpf.csproj",
+  "projectFilePath": "C:\\Users\\user\\source\\visualStudio\\c#\\test\\front\\wpf\\wpf.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\user\\.nuget\\packages\\commonservicelocator\\2.0.2\\commonservicelocator.2.0.2.nupkg.sha512",
     "C:\\Users\\user\\.nuget\\packages\\helixtoolkit.wpf\\2.26.0\\helixtoolkit.wpf.2.26.0.nupkg.sha512",

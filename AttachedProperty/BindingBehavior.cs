@@ -14,59 +14,51 @@ namespace WPF_PROXY;
 /// </summary>
 public class BindingBehavior : Behavior<HelixViewport3D>
 {
-    public static readonly DependencyProperty CameraProperty =
-        DependencyProperty.Register(
-            nameof(Camera),
-            typeof(ProjectionCamera),
-            typeof(BindingBehavior),
-            new PropertyMetadata(new PerspectiveCamera(),OnCameraChanged));//valeur par défaut de CameraProperty
-    
-    public readonly DependencyPropertyChangedEventArgs e;
-    
-    public ProjectionCamera Camera
-    {
-        get => (ProjectionCamera)GetValue(CameraProperty);
+    public static readonly DependencyProperty OrbiteBind =
+    DependencyProperty.Register(
+        nameof(Orbite),
+        typeof(Mouvement),
+        typeof(BindingBehavior),
+        new PropertyMetadata(new Mouvement(), OnOrbiteChanged));
 
-        set => SetValue(CameraProperty, value);
+    private DependencyPropertyChangedEventArgs e;
+
+    public Mouvement Orbite
+    {
+        get => (Mouvement)GetValue(OrbiteBind);
+        set => SetValue(OrbiteBind, value);
     }
 
     /// <summary>
-    ///dès qu'une nouvelle projection est assignée à Orbite, l'événement de changement propulse cette nouvelle valeur vers la méthode 
-    ///Association() qui adapte dynamiquement l'état de la caméra liée.
-    ///Problème: Orbite est du même type que e.NewValue donc d'ou provient le NullReference ? 
-    /// </summary>
-    /// <param name="e"></param>
-    public void Association(DependencyPropertyChangedEventArgs e)
-    {
-        Trace.TraceInformation($"type e.NewValue: {e.NewValue.GetType()}");
-
-        if (e.NewValue is Projection newCam)
-        {
-            AssociatedObject.Camera.Position = (Point3D)newCam.Position;
-            AssociatedObject.CameraRotationMode = CameraRotationMode.Turnball;
-        }
-    }
-
-    /// <summary>
-    /// illustration du CallBack
+    /// CallBack
     /// </summary>
     /// <param name="d"></param>
     /// <param name="e"></param>
-    private static void OnCameraChanged(DependencyObject d,DependencyPropertyChangedEventArgs e)
+    private static void OnOrbiteChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        if (d is BindingBehavior behavior)
+        if (d is BindingBehavior behavior && behavior.AssociatedObject != null)
         {
             behavior.Association(e);
         }
     }
 
+    private void Association(DependencyPropertyChangedEventArgs e)
+    {
+        if (e.NewValue is Mouvement newCam)
+        {
+            AssociatedObject.Camera.Position = (Point3D)newCam.Position;
+        }
+    }
+
     protected override void OnAttached()
     {
-        base.OnAttached(); //attache Orbite à Camera de HelixViewport3D 
-        
-        if (Camera != null)
+        base.OnAttached();
+
+        if (Orbite != null)
         {
             Association(e);
         }
+
     }
 }
+

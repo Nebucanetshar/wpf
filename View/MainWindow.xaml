@@ -21,7 +21,7 @@
         <h:HelixViewport3D x:Name="Helix">
 
             <i:Interaction.Behaviors>
-                <p:BindingBehavior Camera="{Binding Data.Orbite, Source={StaticResource proxy}}"/>
+                <p:BindingBehavior Orbite="{Binding Data.Orbite, Source={StaticResource proxy}}"/>
             </i:Interaction.Behaviors>
             
             <h:SunLight/>

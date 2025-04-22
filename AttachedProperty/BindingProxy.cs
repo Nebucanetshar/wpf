@@ -9,24 +9,6 @@ namespace WPF_PROXY;
 /// <summary>
 /// création d'une Attached Property à Camera de "http://helix-toolkit.org/wpf" 
 /// </summary>
-//public class BindingProxy<T> : Freezable where T : class
-//{
-//    public static readonly DependencyProperty DataProperty =
-//        DependencyProperty.Register(
-//            nameof(Data),
-//            typeof(T),
-//            typeof(BindingProxy<T>),
-//            new PropertyMetadata(default(T)));
-
-//    public T Data
-//    {
-//        get => (T)GetValue(DataProperty);
-//        set => SetValue(DataProperty, value);
-//    }
-//    protected override Freezable CreateInstanceCore() => new BindingProxy<T>();
-
-//}
-
 public class BindingProxy : Freezable
 {
     public static readonly DependencyProperty DataProperty =

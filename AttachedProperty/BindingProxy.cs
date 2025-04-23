@@ -16,7 +16,7 @@ public class BindingProxy : Freezable
             nameof(Data),
             typeof(Mouvement),
             typeof(BindingProxy),
-            new UIPropertyMetadata(null)); //valeur de la propriété Orbite dans le fichier Mouvement.cs
+            new UIPropertyMetadata(null)); //valeur de la propriété Orbite dans le fichier Mouvement.cs 
 
     protected override Freezable CreateInstanceCore() => new BindingProxy();
 

@@ -20,7 +20,7 @@ public class BindingBehavior : Behavior<HelixViewport3D>
         nameof(Orbite),
         typeof(Projection),
         typeof(BindingBehavior),
-        new PropertyMetadata(new Projection(), OnOrbiteChanged));
+        new PropertyMetadata(new Projection(), OrbiteChanged));
 
     private DependencyPropertyChangedEventArgs e;
 
@@ -31,11 +31,12 @@ public class BindingBehavior : Behavior<HelixViewport3D>
     }
 
     /// <summary>
-    /// CallBack
+    /// CallBack, WPF appelle d'abord OnOrbiteChanged avec OldValue = unset et NewValue = null resulte d'une difficulté d'introspection 
+    /// à cause d'un Binding actif mais comprenant une valeur non résolue (UnsetValue != null) dans le CLR 
     /// </summary>
     /// <param name="d"></param>
     /// <param name="e"></param>
-    private static void OnOrbiteChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    private static void OrbiteChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is BindingBehavior behavior && behavior.AssociatedObject != null)
         {
@@ -44,17 +45,29 @@ public class BindingBehavior : Behavior<HelixViewport3D>
     }
 
     /// <summary>
-    /// le binding n'est pas encore actif ??
+    /// le binding n'est pas encore actif ?? si il l'est !
     /// </summary>
     /// <param name="e"></param>
     private void Association(DependencyPropertyChangedEventArgs e)
     {
+        Trace.TraceInformation($"e.NewValue différent de null ?: {e.NewValue != null}");
+        Trace.TraceInformation($"Type e.NewValue: {e.NewValue?.GetType().Name}");
+        Trace.TraceInformation($"Assemblie e.NewValue: {e.NewValue?.GetType().AssemblyQualifiedName}");
+
+
         if (e.NewValue is WPF_PROJ.Projection newCam)
         {
             AssociatedObject.Camera.Position = (Point3D)newCam.Position;
         }
+        else if (e.NewValue == DependencyProperty.UnsetValue)
+        {
+            Trace.TraceInformation($"NewValue is dependencyProperty.UnsetValue (not null, but unset");
+        }
     }
 
+    /// <summary>
+    /// le binding renvoie un type object en mémoire qui n'est pas forcément le même type attendu par e.NewValue
+    /// </summary>
     protected override void OnAttached()
     {
         base.OnAttached();
@@ -66,10 +79,9 @@ public class BindingBehavior : Behavior<HelixViewport3D>
 
             Trace.TraceInformation($"Binding Status: {binding?.Status}");
             Trace.TraceInformation($"Current Orbite value: {value ?? "Null"}");
-            
+
             Association(e);
         }
-
     }
 }
 

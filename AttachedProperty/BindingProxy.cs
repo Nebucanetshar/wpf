@@ -7,7 +7,7 @@ using WPF_PROJ;
 namespace WPF_PROXY;
 
 /// <summary>
-/// création d'une Attached Property à Camera de "http://helix-toolkit.org/wpf" 
+/// Instanciation de Orbite via un Freezable "http://helix-toolkit.org/wpf" 
 /// </summary>
 public class BindingProxy : Freezable
 {

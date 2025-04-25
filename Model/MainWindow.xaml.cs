@@ -51,8 +51,6 @@ public partial class MainWindow : Window
         return camera;
     }
 
-
-
     /// <summary>
     /// Routage vers <i:Interaction.Triggers>
     /// </summary>

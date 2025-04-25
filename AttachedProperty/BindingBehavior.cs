@@ -6,6 +6,7 @@ using System.Diagnostics;
 using WPF_PROJ;
 using WPF_MOVE;
 using System.Windows.Data;
+using System.ComponentModel;
 
 
 namespace WPF_PROXY;
@@ -46,6 +47,7 @@ public class BindingBehavior : Behavior<HelixViewport3D>
 
     /// <summary>
     /// le binding n'est pas encore actif ?? si il l'est !
+    /// REMARQUE Guillaume: pourquoi ne pas paramétré le type Orbite directement ? 
     /// </summary>
     /// <param name="e"></param>
     private void Association(DependencyPropertyChangedEventArgs e)
@@ -55,33 +57,35 @@ public class BindingBehavior : Behavior<HelixViewport3D>
         Trace.TraceInformation($"Assemblie e.NewValue: {e.NewValue?.GetType().AssemblyQualifiedName}");
 
 
-        if (e.NewValue is WPF_PROJ.Projection newCam)
+        if (e.NewValue is Projection newCam)
         {
             AssociatedObject.Camera.Position = (Point3D)newCam.Position;
         }
         else if (e.NewValue == DependencyProperty.UnsetValue)
         {
-            Trace.TraceInformation($"NewValue is dependencyProperty.UnsetValue (not null, but unset");
+            Trace.TraceInformation($"NewValue is dependencyProperty.UnsetValue (not null, but unset)");
         }
     }
 
     /// <summary>
     /// le binding renvoie un type object en mémoire qui n'est pas forcément le même type attendu par e.NewValue
+    /// le DependecyProperty est bindé mais la valeur n'est pas encore injecté 
     /// </summary>
     protected override void OnAttached()
     {
         base.OnAttached();
 
-        if (Orbite != null)
+        if (Orbite != null) 
         {
             var binding = BindingOperations.GetBindingExpression(this, OrbiteBind);
             var value = GetValue(OrbiteBind);
 
             Trace.TraceInformation($"Binding Status: {binding?.Status}");
-            Trace.TraceInformation($"Current Orbite value: {value ?? "Null"}");
+            Trace.TraceInformation($"Current Orbite value: {value.GetType().Name ?? "Null"}");
 
             Association(e);
+
+            Trace.TraceInformation($"t'es quoi: {e.GetType().Name}");
         }
     }
 }
-

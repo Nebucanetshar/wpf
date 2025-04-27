@@ -80,8 +80,6 @@ public class Mouvement : Projection, INotifyPropertyChanged
         frame++;
 
         Trace.TraceInformation($"frame: {frame}, position: {_position}");
-
-        OnPropertyChanged(nameof(Orbite));
     }
 
     public void StartAnimation(bool type)
@@ -95,6 +93,10 @@ public class Mouvement : Projection, INotifyPropertyChanged
         Trace.TraceInformation($"commandParameter EventArgs: {type}");
     }
 
+
+    /// <summary>
+    /// pourquoi est ce qu'il n'est pas configurer directement avec le freezable ou le dependecyObject ?
+    /// </summary>
     public event PropertyChangedEventHandler? PropertyChanged; 
     protected void OnPropertyChanged(string propertyName)
     {

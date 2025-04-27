@@ -61,10 +61,6 @@ public class BindingBehavior : Behavior<HelixViewport3D>
         {
             AssociatedObject.Camera.Position = (Point3D)newCam.Position;
         }
-        else if (e.NewValue == DependencyProperty.UnsetValue)
-        {
-            Trace.TraceInformation($"NewValue is dependencyProperty.UnsetValue (not null, but unset)");
-        }
     }
 
     /// <summary>
@@ -84,8 +80,6 @@ public class BindingBehavior : Behavior<HelixViewport3D>
             Trace.TraceInformation($"Current Orbite value: {value.GetType().Name ?? "Null"}");
 
             Association(e);
-
-            Trace.TraceInformation($"t'es quoi: {e.GetType().Name}");
         }
     }
 }

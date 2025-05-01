@@ -15,29 +15,17 @@ public class Mouvement : Projection, INotifyPropertyChanged
 {
     private int frame = 0;
 
-    private Projection _orbite;
-    public Projection Orbite
+    public Vector3D _position;
+    public Vector3D Position
     {
-        get => _orbite;
+        get => _position;
         set
         {
-            _orbite = value;
-            OnPropertyChanged(nameof(Orbite));
-        }
-    }
+            _position = value;
 
-    /// <summary>
-    /// conversion de la cible en point 
-    /// </summary>
-    public Point3D Point => new(Target.X, Target.Y, Target.Z);
-    private Vector3D _target;
-    public Vector3D Target
-    {
-        get => _target;
-        set
-        {
-             _target = Orbite.Longitude;
-            OnPropertyChanged(nameof(Point));
+            Trace.TraceInformation($"[OnPropertyChanged] Position update to {_position}");
+            
+            OnPropertyChanged(nameof(Position));
         }
     }
 
@@ -48,25 +36,21 @@ public class Mouvement : Projection, INotifyPropertyChanged
         set
         {
             _animate = value;
-            OnPropertyChanged(nameof(Animate));
         }
     }
     /// <summary>
     /// La classe Mouvement appelle le constructeur Projection en base 
     /// </summary>
-    public Mouvement(): base() 
+    public Mouvement() : base()
     {
-        Orbite = new Projection() 
-        {
-            Position = new Vector3D(Xm, 1, Zm),
-        };
+        Position = new Vector3D(Xm, Ym, Zm);
     }
 
     ///<summary>
     ///le déplacement de la position est illustré par le produit vectoriel itéré créant l'animation du mouvement orbital 
     ///dans un espace sphérique avec MAJ camera pour chaque frame
     ///</summary>
-    public void OnRendering(object? sender, EventArgs e) // utilisation d'une autre propriété animable ? 
+    public void OnRendering(object? sender, EventArgs e) 
     {
         int i = frame % Math.Min(phi.Count, theta.Count);
 
@@ -93,11 +77,7 @@ public class Mouvement : Projection, INotifyPropertyChanged
         Trace.TraceInformation($"commandParameter EventArgs: {type}");
     }
 
-
-    /// <summary>
-    /// pourquoi est ce qu'il n'est pas configurer directement avec le freezable ou le dependecyObject ?
-    /// </summary>
-    public event PropertyChangedEventHandler? PropertyChanged; 
+    public event PropertyChangedEventHandler? PropertyChanged;
     protected void OnPropertyChanged(string propertyName)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

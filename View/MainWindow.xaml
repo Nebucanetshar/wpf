@@ -21,12 +21,12 @@
         <h:HelixViewport3D x:Name="Helix">
 
             <i:Interaction.Behaviors>
-                <p:BindingBehavior Orbite="{Binding Data.Orbite, Source={StaticResource proxy}}"/>
+                <p:BindingBehavior Orbite="{Binding Data.Position, Source={StaticResource proxy}}"/>
             </i:Interaction.Behaviors>
             
             <h:SunLight/>
             <h:GridLinesVisual3D Length="7" Width="7" MinorDistance="1" MajorDistance="1"/>
-            <h:SphereVisual3D Center="{Binding Point}"  Radius="0.5"/>
+            <h:SphereVisual3D Radius="0.5"/>
 
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MouseDown">

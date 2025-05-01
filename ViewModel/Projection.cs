@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.ComponentModel;
+using System.Diagnostics;
 using System.Security.Cryptography.X509Certificates;
 using System.Windows;
 using System.Windows.Controls;
@@ -9,7 +10,7 @@ namespace WPF_PROJ;
 /// <summary>
 /// calcul de projection pour définir une animation d'un mouvement 
 /// </summary>
-public class Projection
+public class Projection  
 {
     public double Xm = 0;
     public double Ym = 0;
@@ -19,16 +20,8 @@ public class Projection
     public double polaire;
     public double azimuth;
 
-
     public readonly List<Vector3D> theta = [];
     public readonly List<Vector3D> phi = [];
-
-    public Vector3D _position;
-    public Vector3D Position
-    {
-        get => _position;
-        set => _position = value;
-    }
 
     public Vector3D _longitude;
     public Vector3D Longitude

@@ -21,16 +21,34 @@ public partial class MainWindow : Window
 
         DataContext = new Mouvement();
 
-        var proxy = (BindingProxy)FindResource("proxy");
+        Helix.Camera = OriginOrdered();
 
-        if (proxy?.Data is Mouvement dr)
+        //var proxy = (BindingProxy)FindResource("proxy");
+
+        //if (proxy?.Data is Mouvement dr)
+        //{
+        //    Helix.Camera.AnimateTo(
+        //        new Point3D(dr.Position.X, dr.Position.Y, dr.Position.Z),
+        //        new Vector3D(-1, 0, 0),
+        //        new Vector3D(0, 0, 1),
+        //        0);
+        //};
+
+    }
+
+    public static ProjectionCamera OriginOrdered()
+    {
+        var camera = new PerspectiveCamera
         {
-            Helix.Camera.AnimateTo(
-                new Point3D(dr.Position.X, dr.Position.Y, dr.Position.Z),
-                new Vector3D(-1, 0, 0),
-                new Vector3D(0, 0, 1),
-                100);
-        }
+            Position = new Point3D(1, 0, 0),
+            LookDirection = new Vector3D(-1, 0, 0),
+            UpDirection = new Vector3D(0, 0, 1),
+            //NearPlaneDistance = 0,
+            //FarPlaneDistance = 0,
+            //FieldOfView = 0
+        };
+
+        return camera;
     }
 
     /// <summary>

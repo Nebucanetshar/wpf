@@ -24,7 +24,6 @@ public class Mouvement : Projection, INotifyPropertyChanged
             _position = value;
 
             Trace.TraceInformation($"[OnPropertyChanged] Position update to {_position}");
-            
             OnPropertyChanged(nameof(Position));
         }
     }

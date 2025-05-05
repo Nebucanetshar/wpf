@@ -23,54 +23,68 @@ public class BindingBehavior : Behavior<HelixViewport3D>
         nameof(Orbite),
         typeof(Vector3D),
         typeof(BindingBehavior),
-        new PropertyMetadata(new Vector3D(),Behavior)); // rappel de changement de valeur 
+        new PropertyMetadata(new Vector3D(),behavior));
 
     public Vector3D Orbite
     {
         get => (Vector3D)GetValue(OrbiteBind);
-        set => SetValue(OrbiteBind, value);
+        set => SetValue(OrbiteBind, value); //c'est lui qui déclenche le callBack 
     }
+
+    /// <summary>
+    /// methode provenant de l'abstract Behavior basé sur l'implémentation (T)base.AssociatedObject de l'abstract Behavior<T> quand T est hérité de DependencyObject, le biniding proxy 
+    /// héritant de Freezable lui est définie une CreateInstanceCore() appeler "Position" (ref: .xaml l.24)
+    /// </summary>
     protected override void OnAttached()
     {
         base.OnAttached();
 
         var binding = BindingOperations.GetBindingExpression(this, OrbiteBind);
         var value = GetValue(OrbiteBind);
-        var trigger = new DependencyPropertyChangedEventArgs(OrbiteBind, null, value);
+        var change = new DependencyPropertyChangedEventArgs(OrbiteBind, null, value);
 
-        if (binding != null)
-        {
-            Trace.TraceInformation($"Binding Status: {binding?.Status}");
-            Trace.TraceInformation($"Current Orbite value: {value.GetType().Name}");
-            Trace.TraceInformation($"Value Orbite est différent de null ?: {value != null}");
+        Trace.TraceInformation($"binding status: {binding?.Status}");
+        Trace.TraceInformation($"binding value: {value.GetType().Name}");
+        Trace.TraceInformation($"binding value est différent de null ?: {value != null}");
 
-            Association(trigger);
-        }
-    }
-
-    private void Association(DependencyPropertyChangedEventArgs e)
-    {
-        Trace.TraceInformation($"NewValue est différent de null ?: {e.NewValue != null}");
-
-        if (e.NewValue is Vector3D move)
+        if (value is Vector3D _old)
         {
             AssociatedObject.Camera.Position = new Point3D(
-                move.X,
-                move.Y,
-                move.Z);
+                _old.X,
+                _old.Y,
+                _old.Z );
+
+            Association(change);
         }
     }
 
     /// <summary>
-    /// la vrai valeur bindée arrive via ce callback 
+    /// Association des anciennes valeur de la position avec les nouvelles 
+    /// </summary>
+    /// <param name="e"></param>
+    private void Association(DependencyPropertyChangedEventArgs e)
+    {
+        Trace.TraceInformation($"l'association de valeur peut-il ce faire ?: {e.NewValue != null}");
+
+        if (e.NewValue is Vector3D _new)
+        {
+            AssociatedObject.Camera.Position = new Point3D(
+                _new.X,
+                _new.Y,
+                _new.Z);
+        }
+    }
+
+    /// <summary>
+    /// rappel de changement de valeur (CallBack)
     /// </summary>
     /// <param name="d"></param>
-    /// <param name="e"></param>
-    private static void Behavior(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    /// <param name="move"></param>
+    private static void behavior(DependencyObject d, DependencyPropertyChangedEventArgs move)
     {
         if (d is BindingBehavior behavior && behavior.AssociatedObject != null)
         {
-            behavior.Association(e);
+            behavior.Association(move);
         }
     }
 }

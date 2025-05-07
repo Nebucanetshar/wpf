@@ -23,16 +23,17 @@ public class BindingBehavior : Behavior<HelixViewport3D>
         nameof(Orbite),
         typeof(Vector3D),
         typeof(BindingBehavior),
-        new PropertyMetadata(new Vector3D(),behavior));
+        new PropertyMetadata(new Vector3D(),Trigger));
 
     public Vector3D Orbite
     {
         get => (Vector3D)GetValue(OrbiteBind);
-        set => SetValue(OrbiteBind, value); //c'est lui qui déclenche le callBack 
+        set => SetValue(OrbiteBind, value); //c'est lui qui déclenche le callBack mais à quel moment ? 
+        
     }
 
     /// <summary>
-    /// methode provenant de l'abstract Behavior basé sur l'implémentation (T)base.AssociatedObject de l'abstract Behavior<T> quand T est hérité de DependencyObject, le biniding proxy 
+    /// methode provenant de l'abstract Behavior basé sur l'implémentation (T)base.AssociatedObject de l'abstract Behavior<T> quand T est hérité d'une DependencyObject, le biniding proxy 
     /// héritant de Freezable lui est définie une CreateInstanceCore() appeler "Position" (ref: .xaml l.24)
     /// </summary>
     protected override void OnAttached()
@@ -41,7 +42,8 @@ public class BindingBehavior : Behavior<HelixViewport3D>
 
         var binding = BindingOperations.GetBindingExpression(this, OrbiteBind);
         var value = GetValue(OrbiteBind);
-        var change = new DependencyPropertyChangedEventArgs(OrbiteBind, null, value);
+        
+        var change = new DependencyPropertyChangedEventArgs(OrbiteBind, null, value);//n'est pas détecté par le système WPF 
 
         Trace.TraceInformation($"binding status: {binding?.Status}");
         Trace.TraceInformation($"binding value: {value.GetType().Name}");
@@ -55,6 +57,7 @@ public class BindingBehavior : Behavior<HelixViewport3D>
                 _old.Z );
 
             Association(change);
+            
         }
     }
 
@@ -76,11 +79,12 @@ public class BindingBehavior : Behavior<HelixViewport3D>
     }
 
     /// <summary>
-    /// rappel de changement de valeur (CallBack)
+    /// rappel de changement de valeur (CallBack) le SetValue demande au système WPF de mettre à jour la propriété Orbite, 
+    /// WPF ensuite déclenche beahvior si la valeur change
     /// </summary>
     /// <param name="d"></param>
     /// <param name="move"></param>
-    private static void behavior(DependencyObject d, DependencyPropertyChangedEventArgs move)
+    private static void Trigger(DependencyObject d, DependencyPropertyChangedEventArgs move)
     {
         if (d is BindingBehavior behavior && behavior.AssociatedObject != null)
         {
